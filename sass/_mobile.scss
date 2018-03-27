@@ -1,0 +1,10 @@
+nav{
+  li{
+    display: block;
+  }
+}
+section:nth-child(2){
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  text-align: center;
+}

@@ -1,17 +1,10 @@
+@import '_mixin.scss';
 @import '_mobile.scss';
-
-@media screen and (min-width:576px) {
-	@import "_mobile_landscape.scss";
-}
 
 @media screen and (min-width:768px) {
 	@import "_tablet.scss";
 }
 
-@media screen and (min-width:992px) {
-	@import "_desktop_small.scss";
-}
-
 @media screen and (min-width:1200px) {
-	@import "_desktop_big.scss";
+	@import "_desktop.scss";
 }
