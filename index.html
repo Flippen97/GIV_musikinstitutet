@@ -1,61 +1,85 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Musik Institutet</title>
-    <link type="text/css" href="css/style.css" rel="stylesheet">
-  <body>
-    <header>
-      <nav>
-        <ul>
-          <li>HOME</li>
-          <li>TRACK</li>
-          <li>ARTIST</li>
-          <li>ALBUM</li>
-          <li>PLAYLIST</li>
-        </ul>
-      </nav>
-    </header>
-    <main>
-      <div class="home hidden">
-        <section>
 
-        </section>
-        <section>
-          <div class="topList">
-            <h2>Hottest Tracks</h2>
-            <ul id="topTracks">
-            </ul>
-          </div>
-          <div class="topList">
-            <h2>Hottest Albums</h2>
-            <ul id="topAlbums">
-            </ul>
-          </div>
-          <div class="topList">
-            <h2>Hottest Playlists</h2>
-            <ul id="topPlaylists">
-            </ul>
-          </div>
-        </section>
-      </div>
-      <div class="track hidden">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+	<title>Musik Institutet</title>
+	<link type="text/css" href="css/style.css" rel="stylesheet">
 
-      </div>
-      <div class="artist hidden">
+	<body>
+		<header>
+			<nav>
+				<ul>
+					<li>HOME</li>
+					<li>TRACK</li>
+					<li>ARTIST</li>
+					<li>ALBUM</li>
+					<li>PLAYLIST</li>
+				</ul>
+			</nav>
+		</header>
+		<main>
+			<div class="home hidden">
+				<section>
 
-      </div>
-      <div class="album hidden">
+				</section>
+				<section>
+					<div class="topList">
+						<h2>Hottest Tracks</h2>
+						<ul id="topTracks">
+						</ul>
+					</div>
+					<div class="topList">
+						<h2>Hottest Albums</h2>
+						<ul id="topAlbums">
+						</ul>
+					</div>
+					<div class="topList">
+						<h2>Hottest Playlists</h2>
+						<ul id="topPlaylists">
+						</ul>
+					</div>
+				</section>
+			</div>
+			<div class="track hidden">
+				<div>
+					<h2>Add track</h2>
+					<form>
+					<label for="title">Title</label>
+					<input type="text" id="title"><br/>
+					<label for="artist">Artist</label>
+					<input type="text" id="artist"><br/>
+					<label for="album">Album</label>
+					<input type="text" id="album"><br/>
+					<label for="genre">Genre</label>
+					<input type="text" id="genre"><br/>
+					<input type="submit" value="Add track">
+					</form>
+				</div>
+				<div>
+					<h2>Search</h2>
+					<form>
+					<label for="search">Search</label>
+					<input type="text">
+					<input type="submit" value="Search">
+					</form>
+				</div>
+			</div>
+			<div class="artist hidden">
 
-      </div>
-      <div class="playlist hidden">
+			</div>
+			<div class="album hidden">
 
-      </div>
-    </main>
-    <footer>
+			</div>
+			<div class="playlist hidden">
 
-    </footer>
-    <script type="text/javascript" src="js/main.js"></script>
-  </body>
+			</div>
+		</main>
+		<footer>
+
+		</footer>
+		<script type="text/javascript" src="js/main.js"></script>
+	</body>
+
 </html>
