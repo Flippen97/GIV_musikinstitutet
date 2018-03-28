@@ -1,10 +1,16 @@
-//var searchInputTrack = getElementsById('searchTrack');
-//var searchTracksButton = document.getElementById('searchTracksButton');
+var searchInput = document.getElementById('searchInput');
+var searchOption = document.getElementById('searchOption');
+var searchCategory = document.getElementById('searchCategory');
 
-document.getElementById("searchTracksButton").addEventListener("click", Tracks);
 
-function Tracks() {
-  fetch('https://folksa.ga/api/tracks?key=flat_eric')
+
+document.getElementById("searchTracksButton").addEventListener("click", searchResult);
+
+function searchResult() {
+  console.log(searchInput);
+  console.log(searchOption);
+  console.log(searchCategory);
+  fetch(`https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${searchInput.value}&key=flat_eric`)
   .then((response) => response.json())
   .then((trackss) => {
     console.log(trackss);
