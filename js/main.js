@@ -3,13 +3,15 @@
 
 document.getElementById("searchTracksButton").addEventListener("click", Tracks);
 
-function Tracks(){
+function Tracks() {
   fetch('https://folksa.ga/api/tracks?key=flat_eric')
   .then((response) => response.json())
-  .then((tracks) => {
-    console.log(tracks);
+  .then((trackss) => {
+    console.log(trackss);
+    alert("hej");
   })
   .catch((error) => {
     console.log(error);
+    alert('error');
   });
 }
