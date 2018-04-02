@@ -51,20 +51,23 @@
 				<h2>Add new music</h2>
 					<label for="addCategory">What do you want to add?</label>
 					<select id="addCategory">
-						<option value="tracks">Track</option>
-						<option value="artists">Artist</option>
-						<option value="albums">Album</option>
-						<option value="playlists">Playlist</option>
+						<option selected="selected">Choose category</option>
+						<option id="tracks">Track</option>
+						<option id="artists">Artist</option>
+						<option id="albums">Album</option>
+						<option id="playlists">Playlist</option>
 			  		</select>
 			  		<br/>
-					<label for="title">Title/Name</label>
-					<input type="text" id="title"><br/>
+					<label for="title">Title</label>
+					<input type="text" id="title" class="hidden"><br/>
+					<label for="name">Name</label>
+					<input type="text" id="name" class="artist hidden"><br/>
 					<label for="artist">Artist</label>
-					<input type="text" id="artist"><br/>
+					<input type="text" id="artist" class="hidden"><br/>
 					<label for="album">Album</label>
-					<input type="text" id="album"><br/>
+					<input type="text" id="album" class="hidden"><br/>
 					<label for="genre">Genre</label>
-					<input type="text" id="genre"><br/>
+					<input type="text" id="genre" class="artist hidden"><br/>
 					<button id="addButton">Add</button>
 
 				<!--			<form>
