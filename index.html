@@ -6,54 +6,75 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 	<title>Musik Institutet</title>
 	<link type="text/css" href="css/style.css" rel="stylesheet">
+</head>
 
-	<body>
-		<header>
-			<nav>
-        <h2>Search</h2>
-          
-          <input type="search" id="searchInput">
-          <select id="searchCategory">
+<body>
+	<header>
+		<nav>
+			<h2>Search</h2>
+
+			<input type="search" id="searchInput">
+			<select id="searchCategory">
             <option value="tracks">Track</option>
             <option value="artists">Artist</option>
             <option value="albums">Album</option>
             <option value="playlists">Playlist</option>
           </select>
-          <select id="searchOption">
+			<select id="searchOption">
             <option value="title">Name</option>
             <option value="genre">genre</option>
           </select>
 
-          <button id="searchTracksButton">Submit this shit</button>
-			</nav>
-		</header>
-		<main>
-			<div class="home hidden">
-				<section>
-
-				</section>
-				<section>
-					<div class="topList">
-						<h2>Hottest Tracks</h2>
-						<ul id="topTracks">
-						</ul>
-					</div>
-					<div class="topList">
-						<h2>Hottest Albums</h2>
-						<ul id="topAlbums">
-						</ul>
-					</div>
-					<div class="topList">
-						<h2>Hottest Playlists</h2>
-						<ul id="topPlaylists">
-						</ul>
-					</div>
-				</section>
+			<button id="searchTracksButton">Submit this shit</button>
+		</nav>
+	</header>
+	<main>
+		<section class="toplistsWrapper">
+			<div class="topList">
+				<h2>Hottest Tracks</h2>
+				<ul id="topTracks">
+				</ul>
 			</div>
-			<div class="track hidden">
-				<div>
-					<h2>Add track</h2>
-		<!--			<form>
+			<div class="topList">
+				<h2>Hottest Albums</h2>
+				<ul id="topAlbums">
+				</ul>
+			</div>
+			<div class="topList">
+				<h2>Hottest Playlists</h2>
+				<ul id="topPlaylists">
+				</ul>
+			</div>
+		</section>
+		<section class="addNew">
+			<div>
+				<h2>Add new music</h2>
+					<label for="addCategory">What do you want to add?</label>
+					<select id="addCategory">
+						<option selected="selected">Choose category</option>
+						<option id="tracks">Track</option>
+						<option id="artists">Artist</option>
+						<option id="albums">Album</option>
+						<option id="playlists">Playlist</option>
+			  		</select>
+			  		<br/>
+			  		<div id="title" class="hidden">
+					<label for="title">Title</label>
+					<input type="text">
+					</div><br/>
+					<div id="name" class="hidden"><label for="name">Name</label>
+					<input type="text"></div><br/>
+					<div id="artist" class="hidden"><label for="artist">Artist</label>
+					<input type="text"></div><br/>
+					<div id="album" class="hidden"><label for="album">Album</label>
+					<input type="text" ></div><br/>
+					<div id="genre" class="hidden"><label for="genre">Genre</label>
+					<input type="text"></div><br/>
+					<div id="createdBy" class="hidden"><label for="createdBy">Created by</label>
+					<input type="text"></div><br/>
+					<button id="addButton" class="hidden">Add</button>
+
+				<!--			<form>
 						<label for="title">Title</label>
 						<input type="text" id="title"><br/>
 						<label for="artist">Artist</label>
@@ -64,15 +85,15 @@
 						<input type="text" id="genre"><br/>
 						<input type="submit" value="Add track">
 					</form> -->
-				</div>
-
 			</div>
 
-		</main>
-		<footer>
+		</section>
 
-		</footer>
-		<script type="text/javascript" src="js/main.js"></script>
-	</body>
+	</main>
+	<footer>
+
+	</footer>
+	<script type="text/javascript" src="js/main.js"></script>
+</body>
 
 </html>
