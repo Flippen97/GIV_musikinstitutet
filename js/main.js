@@ -158,7 +158,6 @@ function addTrack(newAlbum) {
 		genres: document.querySelector('#genre input').value
 	}
 
-	console.log(trackInfo);
 	var postOptions = {
 		method: 'POST',
 		headers: {
@@ -168,12 +167,10 @@ function addTrack(newAlbum) {
 		body: JSON.stringify(trackInfo)
 	};
 
-	console.log(postOptions);
-
 	fetch('https://folksa.ga/api/tracks?key=flat_eric', postOptions)
 		.then((response) => response.json())
 		.then((postedTrack) => {
-		console.log(postedTrack);
+		
 		})
 		.catch((error) => {
 			console.log('Request failed: ', error);
@@ -197,7 +194,7 @@ function addPlaylist() {
 fetch('https://folksa.ga/api/playlists?key=flat_eric', postOptions)
 		.then((response) => response.json())
 		.then((postedPlaylist) => {
-			console.log(postedPlaylist);
+			
 		})
 		.catch((error) => {
 			console.log('Request failed: ', error);
