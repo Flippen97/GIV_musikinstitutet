@@ -31,6 +31,7 @@ document.getElementById('addCategory').addEventListener('change', function () {
 	inputFields.artist.style.display = 'none';
 	inputFields.album.style.display = 'none';
 	inputFields.genre.style.display = 'none';
+	inputFields.createdBy.style.display = 'none';
 	inputFields.addButton.style.display = 'none';
 })
 
@@ -60,6 +61,7 @@ function showForm() {
 			break;
 		case 'Playlist':
 			inputFields.title.style.display = 'inline-block';
+			inputFields.createdBy.style.display = 'inline-block';
 			inputFields.addButton.style.display = 'inline-block';
 			break;
 	}
@@ -72,6 +74,7 @@ function formInputFields() {
 		artist: document.getElementById('artist'),
 		album: document.getElementById('album'),
 		genre: document.getElementById('genre'),
+		createdBy: document.getElementById('createdBy'),
 		addButton: document.getElementById('addButton')
 	}
 }
@@ -82,8 +85,13 @@ document.getElementById('addButton').addEventListener('click', function () {
 			addArtist();
 			break;
 		case 'Album':
-			addArtist();
-			addAlbum();
+			addArtist().then(addAlbum);
+			break;
+		case 'Track':
+			addArtist().then(addAlbum).then(addTrack);
+			break;
+		case 'Playlist':
+			addPlaylist();
 			break;
 	}
 });
@@ -103,16 +111,95 @@ function addArtist() {
 		body: JSON.stringify(artistInfo)
 	};
 
-	fetch('https://folksa.ga/api/artists?key=flat_eric', postOptions)
+	return fetch('https://folksa.ga/api/artists?key=flat_eric', postOptions)
 		.then((response) => response.json())
 		.then((postedArtist) => {
-			console.log(postedArtist);
+			var newArtist = postedArtist;
+			return newArtist;
 		})
 		.catch((error) => {
 			console.log('Request failed: ', error);
 		});
 }
 
-function addAlbum(){
-	
+function addAlbum(newArtist) {
+	var albumInfo = {
+		title: document.querySelector('#title input').value,
+		artists: newArtist._id,
+		genres: document.querySelector('#genre input').value
+	}
+
+	var postOptions = {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(albumInfo)
+	};
+
+	return fetch('https://folksa.ga/api/albums?key=flat_eric', postOptions)
+		.then((response) => response.json())
+		.then((postedAlbum) => {
+			var newAlbum = postedAlbum;
+			return newAlbum;
+		})
+		.catch((error) => {
+			console.log('Request failed: ', error);
+		});
+}
+
+function addTrack(newAlbum) {
+	console.log(newAlbum);
+	var trackInfo = {
+		title: document.querySelector('#title input').value,
+		artists: newAlbum.artists.join(','),
+		album: newAlbum._id,
+		genres: document.querySelector('#genre input').value
+	}
+
+	console.log(trackInfo);
+	var postOptions = {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(trackInfo)
+	};
+
+	console.log(postOptions);
+
+	fetch('https://folksa.ga/api/tracks?key=flat_eric', postOptions)
+		.then((response) => response.json())
+		.then((postedTrack) => {
+		console.log(postedTrack);
+		})
+		.catch((error) => {
+			console.log('Request failed: ', error);
+		});
+}
+
+function addPlaylist() {
+	var PlaylistInfo = {
+		title: document.querySelector('#title input').value,
+		createdBy: document.querySelector('#createdBy input').value
+	}
+	var postOptions = {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(PlaylistInfo)
+	};
+
+fetch('https://folksa.ga/api/playlists?key=flat_eric', postOptions)
+		.then((response) => response.json())
+		.then((postedPlaylist) => {
+			console.log(postedPlaylist);
+		})
+		.catch((error) => {
+			console.log('Request failed: ', error);
+		});
 }
