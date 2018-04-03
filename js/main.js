@@ -31,6 +31,7 @@ document.getElementById('addCategory').addEventListener('change', function (){
 	inputFields.artist.style.display = 'none';
 	inputFields.album.style.display = 'none';
 	inputFields.genre.style.display = 'none';
+	inputFields.addButton.style.display = 'none';
 })
 
 let addCategory = document.getElementById('addCategory');
@@ -44,18 +45,22 @@ function showForm() {
 			inputFields.artist.style.display = 'inline-block';
 			inputFields.album.style.display = 'inline-block';
 			inputFields.genre.style.display = 'inline-block';
+			inputFields.addButton.style.display = 'inline-block';
 			break;
 		case 'Artist':
 			inputFields.name.style.display = 'inline-block';
 			inputFields.genre.style.display = 'inline-block';
+			inputFields.addButton.style.display = 'inline-block';
 			break;
 		case 'Album':
 			inputFields.title.style.display = 'inline-block';
 			inputFields.artist.style.display = 'inline-block';
 			inputFields.genre.style.display = 'inline-block';
+			inputFields.addButton.style.display = 'inline-block';
 			break;
 		case 'Playlist':
 			inputFields.title.style.display = 'inline-block';
+			inputFields.addButton.style.display = 'inline-block';
 			break;
 	}
 
