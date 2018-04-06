@@ -40,7 +40,7 @@ document.getElementById('addCategory').addEventListener('change', function () {
 })
 
 let addCategory = document.getElementById('addCategory');
-addCategory.addEventListener('click', showForm);
+addCategory.addEventListener('change', showForm);
 
 function showForm() {
 	formInputFields()
