@@ -3,17 +3,16 @@
 })
 //Parameters for search menu
 
-
-
-//fetch all search results based on parameters
-function searchResult() {
-
   var searchInput = document.getElementById('searchInput');
   var searchOption = document.getElementById('searchOption');
   var searchCategory = document.getElementById('searchCategory');
   const searchButton = document.getElementById("searchTracksButton");
 
   searchButton.addEventListener("click", searchResult);
+
+
+//fetch all search results based on parameters
+function searchResult() {
 
 	fetch(`https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${searchInput.value}&key=flat_eric`)
 		.then((response) => response.json())
