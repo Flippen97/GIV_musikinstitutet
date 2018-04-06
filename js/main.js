@@ -6,7 +6,7 @@
   var searchInput = document.getElementById('searchInput');
   var searchOption = document.getElementById('searchOption');
   var searchCategory = document.getElementById('searchCategory');
-  const searchButton = document.getElementById("searchTracksButton");
+  const searchButton = document.getElementById("searchButton");
 
   searchButton.addEventListener("click", searchResult);
 
