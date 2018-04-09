@@ -66,7 +66,6 @@ function displayTrackSearch(searchResult) {
 			`<h3>Title: ${searchResult[i].title}</h3>
 			<p>Artist: ${artists(searchResult[i].artists)}</p>
 			<p>Genre: ${genres(searchResult[i].genres)}</p>
-			<button>Show more</button>
             <div class="hidden">
                  <p>Album: ${searchResult[i].album.title}</p>
 				<p>${searchResult[i].ratings}</p>
@@ -75,9 +74,11 @@ function displayTrackSearch(searchResult) {
 				<label for="addToPlaylist">Playlist name</label>
 				<input type="text" id="addToPlaylist">
 				<button>Submit</button>
+				<br>
 				<button>Delete track</button>
-            </div>`;
-
+            </div>
+			<button class="show">Show more</button>`;
+		showMoreButtons();
 		resultList.appendChild(resultItem);
 		console.log(searchResult[i]);
 	}
@@ -132,6 +133,24 @@ function displaySearchResult(searchResult) {
 		resultList.appendChild(resultItem);
 		console.log(searchResult[i]);
 	}
+}
+
+//Show more button for every result item. It shows the content of a hidden div.
+
+function showMoreButtons () {
+var showButtons = document.getElementsByClassName("show");
+for (button of showButtons) {
+	button.addEventListener("click", function () {
+		var hiddenDiv = this.previousElementSibling;
+		hiddenDiv.classList.toggle("hidden");
+
+		if (this.innerHTML == "Show more") {
+			this.innerHTML = "Hide"
+		} else if (this.innerHTML == "Hide") {
+			this.innerHTML = "Show more";
+		}
+	})
+}
 }
 
 //Code for adding new content below
