@@ -25,8 +25,7 @@ fetch(`https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${sea
 			alert('error');
 		});
 }
-
-function genres(input){
+ function genres(input){
         var genre = "";
         for (let i = 0; i < input.length; i++ ){
             genre += `${input[i]} `; 
@@ -44,7 +43,6 @@ function genres(input){
 
 function displayArtistSearch(searchResult){
     var resultList = document.getElementById('resultList');
-	
     for (let i = 0; i < searchResult.length; i++ ){
 
         var resultItem = document.createElement('li');
@@ -82,15 +80,15 @@ function displayTrackSearch(searchResult){
         console.log(searchResult[i]);
     }
 }
-function displaySearchResult(searchResult){
+function displayPlaylistSearch(searchResult){
     var resultList = document.getElementById('resultList');
     for (let i = 0; i < searchResult.length; i++ ){
 
         var resultItem = document.createElement('li');
         resultItem.innerHTML = 
-            `<p>${searchResult[i].title}</p>
-            <track>
-            <div class="hidden">
+            `<p>Playlist: ${searchResult[i].title}</p>
+             <p>Genre: ${searchResult[i].genres}</p>
+             <buttons>Delete</button>
                 <rating>
             </div>`;
         
