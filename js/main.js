@@ -17,7 +17,7 @@ function searchResult() {
 	fetch(`https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${searchInput.value}&key=flat_eric`)
 		.then((response) => response.json())
 		.then((searchResult) => {
-			console.log(searchResult);
+			//console.log(searchResult);
 			displayTrackSearch(searchResult);
 		})
 		.catch((error) => {
@@ -27,7 +27,7 @@ function searchResult() {
 }
 
 function genres(input) {
-	var genre = "";
+	var genre = '';
 	for (let i = 0; i < input.length; i++) {
 		genre += `${input[i]} `;
 	}
@@ -35,19 +35,11 @@ function genres(input) {
 }
 
 function artists(input) {
-	var artist = "";
+	var artist = '';
 	for (let i = 0; i < input.length; i++) {
 		artist += `${input[i].name} `;
 	}
 	return artist;
-}
-
-function album(input) {
-	var album = "";
-	for (let i = 0; i < input.length; i++) {
-		album += `${input[i].album} `;
-	}
-	return album;
 }
 
 function displayArtistSearch(searchResult) {
@@ -76,7 +68,7 @@ function displayTrackSearch(searchResult) {
 			<p>Genre: ${genres(searchResult[i].genres)}</p>
 			<button>Show more</button>
             <div class="hidden">
-                 <p>${searchResult[i].album}</p>
+                 <p>Album: ${searchResult[i].album.title}</p>
 				<p>${searchResult[i].ratings}</p>
 				<h4>Rate track</h4>
 				<h4>Add to playlist</h4>
