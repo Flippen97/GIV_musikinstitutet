@@ -12,16 +12,30 @@ function searchResult() {
 	console.log(searchCategory);
 	fetch(`https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${searchInput.value}&key=flat_eric`)
 		.then((response) => response.json())
-		.then((trackss) => {
-			console.log(trackss);
-			alert("hej");
+		.then((searchResult) => {
+            displaySearchResult(searchResult);
 		})
 		.catch((error) => {
 			console.log(error);
 			alert('error');
 		});
 }
+function displaySearchResult(searchResult){
+    var resultList = document.getElementById('resultList');
+    for (let i = 0; i < searchResult.length; i++ ){
 
+        var resultItem = document.createElement('li');
+        resultItem.innerHTML = 
+            `<p>${searchResult.title}</p>
+            <track>
+            <div class="hidden">
+                <rating>
+            </div>`;
+        
+        searchResult.appendChild(resultItem);
+        console.log(searchResult[i]);
+    }
+}
 //Code for adding new content below
 
 document.getElementById('addCategory').addEventListener('change', function () {
