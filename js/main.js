@@ -18,16 +18,14 @@ fetch(`https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${sea
 		.then((response) => response.json())
 		.then((searchResult) => {
             console.log(searchResult);
-            displayArtistSearch(searchResult);
+            displayPlaylistSearch(searchResult);
 		})
 		.catch((error) => {
 			console.log(error);
 			alert('error');
 		});
 }
-function displayArtistSearch(searchResult){
-    var resultList = document.getElementById('resultList');
-    function genres(input){
+ function genres(input){
         var genre = "";
         for (let i = 0; i < input.length; i++ ){
             genre += `${input[i]} `;
@@ -35,6 +33,8 @@ function displayArtistSearch(searchResult){
         }
         return genre;
     }
+function displayArtistSearch(searchResult){
+    var resultList = document.getElementById('resultList');
     for (let i = 0; i < searchResult.length; i++ ){
 
         var resultItem = document.createElement('li');
@@ -64,15 +64,15 @@ function displaySearchResult(searchResult){
         console.log(searchResult[i]);
     }
 }
-function displaySearchResult(searchResult){
+function displayPlaylistSearch(searchResult){
     var resultList = document.getElementById('resultList');
     for (let i = 0; i < searchResult.length; i++ ){
 
         var resultItem = document.createElement('li');
         resultItem.innerHTML = 
-            `<p>${searchResult[i].title}</p>
-            <track>
-            <div class="hidden">
+            `<p>Playlist: ${searchResult[i].title}</p>
+             <p>Genre: ${searchResult[i].genres}</p>
+             <buttons>Delete</button>
                 <rating>
             </div>`;
         
