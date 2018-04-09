@@ -1,15 +1,19 @@
-var searchInput = document.getElementById('searchInput');
-var searchOption = document.getElementById('searchOption');
-var searchCategory = document.getElementById('searchCategory');
+({
+  "plugins": ["jsdom-quokka-plugin"]
+})
+//Parameters for search menu
+
+  var searchInput = document.getElementById('searchInput');
+  var searchOption = document.getElementById('searchOption');
+  var searchCategory = document.getElementById('searchCategory');
+  const searchButton = document.getElementById("searchButton");
+
+  searchButton.addEventListener("click", searchResult);
 
 
-
-document.getElementById("searchTracksButton").addEventListener("click", searchResult);
-
+//fetch all search results based on parameters
 function searchResult() {
-	console.log(searchInput);
-	console.log(searchOption);
-	console.log(searchCategory);
+
 	fetch(`https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${searchInput.value}&key=flat_eric`)
 		.then((response) => response.json())
 		.then((searchResult) => {
@@ -50,7 +54,7 @@ document.getElementById('addCategory').addEventListener('change', function () {
 })
 
 let addCategory = document.getElementById('addCategory');
-addCategory.addEventListener('click', showForm);
+addCategory.addEventListener('change', showForm);
 
 function showForm() {
 	formInputFields()
@@ -213,4 +217,43 @@ fetch('https://folksa.ga/api/playlists?key=flat_eric', postOptions)
 		.catch((error) => {
 			console.log('Request failed: ', error);
 		});
+}
+
+//Add comment to playlist
+function addCommentPlaylist(){
+/*
+  let comment = {
+    playlist: "5aae312ee3534b03981f6521",
+    body: "Wow, great playlist!",
+    username: "The commenter"
+  }
+
+  fetch(`https://folksa.ga/api/playlists/5aae312ee3534b03981f6521/comments`,{
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(comment)
+    })
+    .then((response) => response.json())
+    .then((playlist) => {
+    console.log(playlist);
+  });*/
+}
+
+//Vote on 
+function vote(){
+  fetch(`https://folksa.ga/api/${category}/${categoryID}/vote`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ rating: 9 })
+    })
+    .then((response) => response.json())
+    .then((playlist) => {
+        console.log(playlist);
+    });
 }
