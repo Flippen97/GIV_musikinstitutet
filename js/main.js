@@ -18,23 +18,33 @@ fetch(`https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${sea
 		.then((response) => response.json())
 		.then((searchResult) => {
             console.log(searchResult);
-            displayArtistSearch(searchResult);
+            displayTrackSearch(searchResult);
 		})
 		.catch((error) => {
 			console.log(error);
 			alert('error');
 		});
 }
-function displayArtistSearch(searchResult){
-    var resultList = document.getElementById('resultList');
-    function genres(input){
+
+function genres(input){
         var genre = "";
         for (let i = 0; i < input.length; i++ ){
-            genre += `${input[i]} `;
-            
+            genre += `${input[i]} `; 
         }
         return genre;
     }
+	
+	function artists(input){
+        var artist = "";
+        for (let i = 0; i < input.length; i++){
+            artist += `${input[i].name} `; 
+        }
+        return artist;
+    }
+
+function displayArtistSearch(searchResult){
+    var resultList = document.getElementById('resultList');
+	
     for (let i = 0; i < searchResult.length; i++ ){
 
         var resultItem = document.createElement('li');
@@ -48,16 +58,24 @@ function displayArtistSearch(searchResult){
         console.log(searchResult[i]);
     }
 }
-function displaySearchResult(searchResult){
+function displayTrackSearch(searchResult){
     var resultList = document.getElementById('resultList');
     for (let i = 0; i < searchResult.length; i++ ){
-
         var resultItem = document.createElement('li');
         resultItem.innerHTML = 
-            `<p>${searchResult[i].title}</p>
-            <track>
+            `<h3>Title: ${searchResult[i].title}</h3>
+			<p>Artist: ${artists(searchResult[i].artists)}</p>
+			<p>Genre: ${genres(searchResult[i].genres)}</p>
+			<button>Show more</button>
             <div class="hidden">
-                <rating>
+                 <p>${searchResult[i].album}</p>
+				<p>${searchResult[i].ratings}</p>
+				<h4>Rate track</h4>
+				<h4>Add to playlist</h4>
+				<label for="addToPlaylist">Playlist name</label>
+				<input type="text" id="addToPlaylist">
+				<button>Submit</button>
+				<button>Delete track</button>
             </div>`;
         
         resultList.appendChild(resultItem);
