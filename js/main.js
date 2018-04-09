@@ -14,15 +14,39 @@
 //fetch all search results based on parameters
 function searchResult() {
 
-	fetch(`https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${searchInput.value}&key=flat_eric`)
+fetch(`https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${searchInput.value}&key=flat_eric`)
 		.then((response) => response.json())
 		.then((searchResult) => {
-            displaySearchResult(searchResult);
+            console.log(searchResult);
+            displayArtistSearch(searchResult);
 		})
 		.catch((error) => {
 			console.log(error);
 			alert('error');
 		});
+}
+function displayArtistSearch(searchResult){
+    var resultList = document.getElementById('resultList');
+    function genres(input){
+        var genre = "";
+        for (let i = 0; i < input.length; i++ ){
+            genre += `${input[i]} `;
+            
+        }
+        return genre;
+    }
+    for (let i = 0; i < searchResult.length; i++ ){
+
+        var resultItem = document.createElement('li');
+        resultItem.innerHTML = 
+            `<p>Name: ${searchResult[i].name}</p>
+             <p>Genre: ${genres(searchResult[i].genres)}</p>
+             <button>Delete</button>
+             `;
+        
+        resultList.appendChild(resultItem);
+        console.log(searchResult[i]);
+    }
 }
 function displaySearchResult(searchResult){
     var resultList = document.getElementById('resultList');
@@ -30,16 +54,65 @@ function displaySearchResult(searchResult){
 
         var resultItem = document.createElement('li');
         resultItem.innerHTML = 
-            `<p>${searchResult.title}</p>
+            `<p>${searchResult[i].title}</p>
             <track>
             <div class="hidden">
                 <rating>
             </div>`;
         
-        searchResult.appendChild(resultItem);
+        resultList.appendChild(resultItem);
         console.log(searchResult[i]);
     }
 }
+function displaySearchResult(searchResult){
+    var resultList = document.getElementById('resultList');
+    for (let i = 0; i < searchResult.length; i++ ){
+
+        var resultItem = document.createElement('li');
+        resultItem.innerHTML = 
+            `<p>${searchResult[i].title}</p>
+            <track>
+            <div class="hidden">
+                <rating>
+            </div>`;
+        
+        resultList.appendChild(resultItem);
+        console.log(searchResult[i]);
+    }
+}
+function displaySearchResult(searchResult){
+    var resultList = document.getElementById('resultList');
+    for (let i = 0; i < searchResult.length; i++ ){
+
+        var resultItem = document.createElement('li');
+        resultItem.innerHTML = 
+            `<p>${searchResult[i].title}</p>
+            <track>
+            <div class="hidden">
+                <rating>
+            </div>`;
+        
+        resultList.appendChild(resultItem);
+        console.log(searchResult[i]);
+    }
+}
+function displaySearchResult(searchResult){
+    var resultList = document.getElementById('resultList');
+    for (let i = 0; i < searchResult.length; i++ ){
+
+        var resultItem = document.createElement('li');
+        resultItem.innerHTML = 
+            `<p>${searchResult[i].title}</p>
+            <track>
+            <div class="hidden">
+                <rating>
+            </div>`;
+        
+        resultList.appendChild(resultItem);
+        console.log(searchResult[i]);
+    }
+}
+
 //Code for adding new content below
 
 document.getElementById('addCategory').addEventListener('change', function () {
