@@ -63,12 +63,12 @@ function displayArtistSearch(searchResult) {
     resultItem.innerHTML =
       `<p>Name: ${searchResult[i].name}</p>
              <p>Genre: ${genres(searchResult[i].genres)}</p>
-             <button>Delete</button>
+             <button class="delete" name="artists" id=${searchResult[i]._id}>Delete</button>
              `;
-
-    resultList.appendChild(resultItem);
-    console.log(searchResult[i]);
-  }
+		deleteButtons();
+		resultList.appendChild(resultItem);
+		console.log(searchResult[i]);
+	}
 }
 
 function displayTrackSearch(searchResult) {
@@ -80,21 +80,21 @@ function displayTrackSearch(searchResult) {
 			<p>Artist: ${artists(searchResult[i].artists)}</p>
 			<p>Genre: ${genres(searchResult[i].genres)}</p>
             <div class="hidden">
-                 <p>Album: ${searchResult[i].album.title}</p>
+                <p>Album: ${searchResult[i].album.title}</p>
 				<p>${searchResult[i].ratings}</p>
 				<h4>Rate track</h4>
 				<h4>Add to playlist</h4>
 				<label for="addToPlaylist">Playlist name</label>
 				<input type="text" id="addToPlaylist">
 				<button>Submit</button>
-				<br>
-				<button>Delete track</button>
             </div>
-			<button class="show">Show more</button>`;
-    showMoreButtons();
-    resultList.appendChild(resultItem);
-    console.log(searchResult[i]);
-  }
+			<button class="show">Show more</button>
+			<button class="delete" id=${searchResult[i].selfLink}>Delete track</button>`;
+		showMoreButtons();
+		deleteButtons();
+		resultList.appendChild(resultItem);
+		console.log(searchResult[i]);
+	}
 }
 
 function displayPlaylistSearch(searchResult) {
@@ -137,19 +137,20 @@ function displayAlbumSearch(searchResult) {
 //Show more button for every result item. It shows the content of a hidden div.
 
 function showMoreButtons() {
-  var showButtons = document.getElementsByClassName("show");
-  for (button of showButtons) {
-    button.addEventListener("click", function () {
-      var hiddenDiv = this.previousElementSibling;
-      hiddenDiv.classList.toggle("hidden");
+	var showButtons = document.getElementsByClassName("show");
+	for (button of showButtons) {
+		button.addEventListener("click", function () {
+			var hiddenDiv = this.previousElementSibling;
+			hiddenDiv.classList.toggle("hidden");
 
-      if (this.innerHTML == "Show more") {
-        this.innerHTML = "Hide"
-      } else if (this.innerHTML == "Hide") {
-        this.innerHTML = "Show more";
-      }
-    })
-  }
+			if (this.innerHTML == "Show more") {
+				this.innerHTML = "Hide"
+			} else if (this.innerHTML == "Hide") {
+				this.innerHTML = "Show more";
+			}
+		})
+	}
+
 }
 
 //Code for adding new content below
@@ -356,18 +357,45 @@ function addCommentPlaylist() {
 
 //Vote on 
 function vote() {
-  fetch(`https://folksa.ga/api/${category}/${categoryID}/vote`, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        rating: 9
-      })
-    })
-    .then((response) => response.json())
-    .then((playlist) => {
-      console.log(playlist);
-    });
+	fetch(`https://folksa.ga/api/${category}/${categoryID}/vote`, {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				rating: 9
+			})
+		})
+		.then((response) => response.json())
+		.then((playlist) => {
+			console.log(playlist);
+		});
+}
+
+//Deletefunction
+function deleteButtons() {
+	var deleteButtons = document.getElementsByClassName("delete");
+	
+	var deleteOptions = {
+		method: 'DELETE',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		}
+	};
+	
+	for (button of deleteButtons) {
+		button.addEventListener("click", function () {
+			var itemToDelete = this.id;
+			
+			console.log(itemToDelete);
+			console.log(this.name)
+			fetch(`https://folksa.ga/api/${this.name}/${this.id}?key=flat_eric`, deleteOptions)
+				.then((response) => response.json())
+				.then((deletedItem) => {
+					//console.log(deletedItem);
+				});
+		})
+	}
 }
