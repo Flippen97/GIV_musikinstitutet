@@ -57,6 +57,7 @@ function artists(input) {
 
 function displayArtistSearch(searchResult) {
 	var resultList = document.getElementById('resultList');
+	resultList.innerHTML='';
 	for (let i = 0; i < searchResult.length; i++) {
 
 		var resultItem = document.createElement('li');
@@ -73,6 +74,7 @@ function displayArtistSearch(searchResult) {
 
 function displayTrackSearch(searchResult) {
 	var resultList = document.getElementById('resultList');
+	resultList.innerHTML='';
 	for (let i = 0; i < searchResult.length; i++) {
 		var resultItem = document.createElement('li');
 		resultItem.innerHTML =
@@ -99,6 +101,7 @@ function displayTrackSearch(searchResult) {
 
 function displayPlaylistSearch(searchResult) {
 	var resultList = document.getElementById('resultList');
+	resultList.innerHTML='';
 	for (let i = 0; i < searchResult.length; i++) {
 
 		var resultItem = document.createElement('li');
@@ -116,6 +119,7 @@ function displayPlaylistSearch(searchResult) {
 
 function displayAlbumSearch(searchResult) {
 	var resultList = document.getElementById('resultList');
+	resultList.innerHTML='';
 	for (let i = 0; i < searchResult.length; i++) {
 
 		var resultItem = document.createElement('li');
@@ -128,7 +132,7 @@ function displayAlbumSearch(searchResult) {
           
       </div>
       <button class="show">Show more</button>
-      <button class="delete" name="playlists" id=${searchResult[i]._id}>Delete track</button>`;
+      <button class="delete" name="albums" id=${searchResult[i]._id}>Delete track</button>`;
 		showMoreButtons();
 		deleteButtons();
 		resultList.appendChild(resultItem);
