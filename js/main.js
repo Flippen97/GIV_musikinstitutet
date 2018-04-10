@@ -18,7 +18,6 @@ function searchResult() {
 	fetch(`https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${searchInput.value}&populateArtists=true&key=flat_eric`)
 		.then((response) => response.json())
 		.then((searchResult) => {
-			console.log(searchCategory.value);
 			if (searchCategory.value == "tracks") {
 				alert("track")
 				displayTrackSearch(searchResult);
@@ -57,7 +56,7 @@ function artists(input) {
 
 function displayArtistSearch(searchResult) {
 	var resultList = document.getElementById('resultList');
-	resultList.innerHTML='';
+	resultList.innerHTML = '';
 	for (let i = 0; i < searchResult.length; i++) {
 
 		var resultItem = document.createElement('li');
@@ -66,15 +65,14 @@ function displayArtistSearch(searchResult) {
              <p>Genre: ${genres(searchResult[i].genres)}</p>
              <button class="delete" name="artists" id=${searchResult[i]._id}>Delete</button>
              `;
-		deleteButtons();
 		resultList.appendChild(resultItem);
-		console.log(searchResult[i]);
 	}
+	deleteButtons();
 }
 
 function displayTrackSearch(searchResult) {
 	var resultList = document.getElementById('resultList');
-	resultList.innerHTML='';
+	resultList.innerHTML = '';
 	for (let i = 0; i < searchResult.length; i++) {
 		var resultItem = document.createElement('li');
 		resultItem.innerHTML =
@@ -92,16 +90,16 @@ function displayTrackSearch(searchResult) {
             </div>
 			<button class="show">Show more</button>
 			<button class="delete" name="tracks" id=${searchResult[i]._id}>Delete track</button>`;
-		showMoreButtons();
-		deleteButtons();
+		resultItem.id = 
 		resultList.appendChild(resultItem);
-		console.log(searchResult[i]);
 	}
+	showMoreButtons();
+	deleteButtons();
 }
 
 function displayPlaylistSearch(searchResult) {
 	var resultList = document.getElementById('resultList');
-	resultList.innerHTML='';
+	resultList.innerHTML = '';
 	for (let i = 0; i < searchResult.length; i++) {
 
 		var resultItem = document.createElement('li');
@@ -110,16 +108,15 @@ function displayPlaylistSearch(searchResult) {
              <p>Genre: ${searchResult[i].genres}</p>
              <button class="delete" name="playlists" id=${searchResult[i]._id}>Delete</button>
             `;
-		showMoreButtons();
-		deleteButtons();
 		resultList.appendChild(resultItem);
-		console.log(searchResult[i]);
 	}
+	showMoreButtons();
+	deleteButtons();
 }
 
 function displayAlbumSearch(searchResult) {
 	var resultList = document.getElementById('resultList');
-	resultList.innerHTML='';
+	resultList.innerHTML = '';
 	for (let i = 0; i < searchResult.length; i++) {
 
 		var resultItem = document.createElement('li');
@@ -133,11 +130,10 @@ function displayAlbumSearch(searchResult) {
       </div>
       <button class="show">Show more</button>
       <button class="delete" name="albums" id=${searchResult[i]._id}>Delete track</button>`;
-		showMoreButtons();
-		deleteButtons();
 		resultList.appendChild(resultItem);
-		console.log(searchResult[i]);
 	}
+	showMoreButtons();
+	deleteButtons();
 }
 
 //Show more button for every result item. It shows the content of a hidden div.
@@ -382,7 +378,6 @@ function vote() {
 //Deletefunction
 function deleteButtons() {
 	var deleteButtons = document.getElementsByClassName("delete");
-
 	var deleteOptions = {
 		method: 'DELETE',
 		headers: {
@@ -391,17 +386,16 @@ function deleteButtons() {
 		}
 	};
 
-	for (button of deleteButtons) {
+	for (let button of deleteButtons) {
 		button.addEventListener("click", function () {
 			var itemToDelete = this.id;
-
-			console.log(itemToDelete);
-			console.log(this.name)
 			fetch(`https://folksa.ga/api/${this.name}/${this.id}?key=flat_eric`, deleteOptions)
 				.then((response) => response.json())
 				.then((deletedItem) => {
 					//console.log(deletedItem);
 				});
+			var listItemToDelete = this.parentElement;
+		listItemToDelete.parentNode.removeChild(listItemToDelete);
 		})
 	}
 }
