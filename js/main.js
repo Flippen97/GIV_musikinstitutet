@@ -6,56 +6,56 @@
 searchParameters()
 
 function searchParameters() {
-  var searchInput = document.getElementById('searchInput');
-  var searchOption = document.getElementById('searchOption');
-  var searchCategory = document.getElementById('searchCategory');
-  const searchButton = document.getElementById("searchButton");
+	var searchInput = document.getElementById('searchInput');
+	var searchOption = document.getElementById('searchOption');
+	var searchCategory = document.getElementById('searchCategory');
+	const searchButton = document.getElementById("searchButton");
 
-  searchButton.addEventListener("click", function () {
+	searchButton.addEventListener("click", function () {
 
-    if (searchCategory.value == "artists" && searchOption.value == "title") {
-      var URL = `https://folksa.ga/api/${searchCategory.value}?name=${searchInput.value}&key=flat_eric`;
-    } else if (searchCategory.value == "albums") {
-      var URL = `https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${searchInput.value}&populateArtists=true&key=flat_eric`;
-    } else {
-      var URL = `https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${searchInput.value}&key=flat_eric`;
-    }
-    searchResult(URL);
-  });
+		if (searchCategory.value == "artists" && searchOption.value == "title") {
+			var URL = `https://folksa.ga/api/${searchCategory.value}?name=${searchInput.value}&key=flat_eric`;
+		} else if (searchCategory.value == "albums") {
+			var URL = `https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${searchInput.value}&populateArtists=true&key=flat_eric`;
+		} else {
+			var URL = `https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${searchInput.value}&key=flat_eric`;
+		}
+		searchResult(URL);
+	});
 
 }
 //fetch all search results based on parameters
 function searchResult(URL) {
 
-  fetch(URL)
-    .then((response) => response.json())
-    .then((searchResult) => {
-      console.log(searchCategory.value);
-      if (searchCategory.value == "tracks") {
-        displayTrackSearch(searchResult);
-      } else if (searchCategory.value == "artists") {
-        displayArtistSearch(searchResult);
-      } else if (searchCategory.value == "albums") {
-        displayAlbumSearch(searchResult)
-      } else if (searchCategory.value == "playlists") {
-        displayPlaylistSearch(searchResult)
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-      alert('error');
-    });
+	fetch(URL)
+		.then((response) => response.json())
+		.then((searchResult) => {
+			console.log(searchCategory.value);
+			if (searchCategory.value == "tracks") {
+				displayTrackSearch(searchResult);
+			} else if (searchCategory.value == "artists") {
+				displayArtistSearch(searchResult);
+			} else if (searchCategory.value == "albums") {
+				displayAlbumSearch(searchResult)
+			} else if (searchCategory.value == "playlists") {
+				displayPlaylistSearch(searchResult)
+			}
+		})
+		.catch((error) => {
+			console.log(error);
+			alert('error');
+		});
 }
 
 function genres(input) {
-  var genre = '';
-  for (let i = 0; i < input.length; i++) {
-    if (i >= 1) {
-      genre += `, `;
-    }
-    genre += `${input[i]}`;
-  }
-  return genre;
+	var genre = '';
+	for (let i = 0; i < input.length; i++) {
+		if (i >= 1) {
+			genre += `, `;
+		}
+		genre += `${input[i]}`;
+	}
+	return genre;
 
 }
 
@@ -105,8 +105,8 @@ function displayTrackSearch(searchResult) {
 			<button class="show">Show more</button>
 
 			<button class="delete" name="tracks" id=${searchResult[i]._id}>Delete track</button>`;
-		resultItem.id = 
-		resultList.appendChild(resultItem);
+		resultItem.id =
+			resultList.appendChild(resultItem);
 	}
 	showMoreButtons();
 	deleteButtons();
@@ -117,9 +117,9 @@ function displayPlaylistSearch(searchResult) {
 	resultList.innerHTML = '';
 	for (let i = 0; i < searchResult.length; i++) {
 
-    var resultItem = document.createElement('li');
-    resultItem.innerHTML =
-      ` <p>Playlist: ${searchResult[i].title}</p>
+		var resultItem = document.createElement('li');
+		resultItem.innerHTML =
+			` <p>Playlist: ${searchResult[i].title}</p>
           <p>Genre: ${searchResult[i].genres}</p>
         <div class="hidden">
              <h4>Rate track</h4>
@@ -158,19 +158,19 @@ function displayAlbumSearch(searchResult) {
 //Show more button for every result item. It shows the content of a hidden div.
 
 function showMoreButtons() {
-  var showButtons = document.getElementsByClassName("show");
-  for (button of showButtons) {
-    button.addEventListener("click", function () {
-      var hiddenDiv = this.previousElementSibling;
-      hiddenDiv.classList.toggle("hidden");
+	var showButtons = document.getElementsByClassName("show");
+	for (button of showButtons) {
+		button.addEventListener("click", function () {
+			var hiddenDiv = this.previousElementSibling;
+			hiddenDiv.classList.toggle("hidden");
 
-      if (this.innerHTML == "Show more") {
-        this.innerHTML = "Hide"
-      } else if (this.innerHTML == "Hide") {
-        this.innerHTML = "Show more";
-      }
-    })
-  }
+			if (this.innerHTML == "Show more") {
+				this.innerHTML = "Hide"
+			} else if (this.innerHTML == "Hide") {
+				this.innerHTML = "Show more";
+			}
+		})
+	}
 
 }
 
@@ -179,7 +179,6 @@ function showMoreButtons() {
 document.getElementById('addCategory').addEventListener('change', function () {
 	formInputFields();
 	inputFields.title.style.display = 'none';
-	inputFields.name.style.display = 'none';
 	inputFields.artist.style.display = 'none';
 	inputFields.album.style.display = 'none';
 	inputFields.genre.style.display = 'none';
@@ -201,12 +200,12 @@ function showForm() {
 			inputFields.addButton.style.display = 'inline-block';
 			break;
 		case 'Artist':
-			inputFields.name.style.display = 'inline-block';
+			inputFields.artist.style.display = 'inline-block';
 			inputFields.genre.style.display = 'inline-block';
 			inputFields.addButton.style.display = 'inline-block';
 			break;
 		case 'Album':
-			inputFields.title.style.display = 'inline-block';
+			inputFields.album.style.display = 'inline-block';
 			inputFields.artist.style.display = 'inline-block';
 			inputFields.genre.style.display = 'inline-block';
 			inputFields.addButton.style.display = 'inline-block';
@@ -222,7 +221,6 @@ function showForm() {
 function formInputFields() {
 	return inputFields = {
 		title: document.getElementById('title'),
-		name: document.getElementById('name'),
 		artist: document.getElementById('artist'),
 		album: document.getElementById('album'),
 		genre: document.getElementById('genre'),
@@ -250,7 +248,7 @@ document.getElementById('addButton').addEventListener('click', function () {
 
 function addArtist() {
 	var artistInfo = {
-		name: document.querySelector('#name input').value,
+		name: document.querySelector('#artist input').value,
 		genres: document.querySelector('#genre input').value,
 	}
 
@@ -276,11 +274,11 @@ function addArtist() {
 
 function addAlbum(newArtist) {
 	var albumInfo = {
-		title: document.querySelector('#title input').value,
+		title: document.querySelector('#album input').value,
 		artists: newArtist._id,
 		genres: document.querySelector('#genre input').value
 	}
-
+	console.log(albumInfo);
 	var postOptions = {
 		method: 'POST',
 		headers: {
@@ -294,6 +292,7 @@ function addAlbum(newArtist) {
 		.then((response) => response.json())
 		.then((postedAlbum) => {
 			var newAlbum = postedAlbum;
+			console.log(newAlbum);
 			return newAlbum;
 		})
 		.catch((error) => {
@@ -322,11 +321,11 @@ function addTrack(newAlbum) {
 	fetch('https://folksa.ga/api/tracks?key=flat_eric', postOptions)
 		.then((response) => response.json())
 		.then((postedTrack) => {
-
 		})
 		.catch((error) => {
 			console.log('Request failed: ', error);
 		});
+	     clearInputFields();
 }
 
 function addPlaylist() {
@@ -346,7 +345,6 @@ function addPlaylist() {
 	fetch('https://folksa.ga/api/playlists?key=flat_eric', postOptions)
 		.then((response) => response.json())
 		.then((postedPlaylist) => {
-
 		})
 		.catch((error) => {
 			console.log('Request failed: ', error);
@@ -356,42 +354,42 @@ function addPlaylist() {
 //Add comment to playlist
 function addCommentPlaylist() {
 
-  let comment = {
-    playlist: "5aae312ee3534b03981f6521",
-    body: "Wow, great playlist!",
-    username: "The commenter"
-  }
+	let comment = {
+		playlist: "5aae312ee3534b03981f6521",
+		body: "Wow, great playlist!",
+		username: "The commenter"
+	}
 
-  fetch(`https://folksa.ga/api/playlists/5aae312ee3534b03981f6521/comments`, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(comment)
-    })
-    .then((response) => response.json())
-    .then((playlist) => {
-      console.log(playlist);
-    });
+	fetch(`https://folksa.ga/api/playlists/5aae312ee3534b03981f6521/comments`, {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(comment)
+		})
+		.then((response) => response.json())
+		.then((playlist) => {
+			console.log(playlist);
+		});
 }
 
 //Vote on 
 function vote() {
-  fetch(`https://folksa.ga/api/${category}/${categoryID}/vote`, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        rating: 9
-      })
-    })
-    .then((response) => response.json())
-    .then((playlist) => {
-      console.log(playlist);
-    });
+	fetch(`https://folksa.ga/api/${category}/${categoryID}/vote`, {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				rating: 9
+			})
+		})
+		.then((response) => response.json())
+		.then((playlist) => {
+			console.log(playlist);
+		});
 }
 
 //Deletefunction
@@ -414,34 +412,42 @@ function deleteButtons() {
 					succesMessage("Item was deleted");
 				});
 			var listItemToDelete = this.parentElement;
-		listItemToDelete.parentNode.removeChild(listItemToDelete);
+			listItemToDelete.parentNode.removeChild(listItemToDelete);
 		})
 	}
 }
 
 function errorMessage(errortext) {
-  var error = document.getElementById('errormessage');
-  error.style.display = 'block';
-  error.classList.add('fadeIn');
-  document.getElementById("errormessage").innerHTML = errortext;
-  setTimeout(function () {
-    error.classList.add('fadeOut');
-    setTimeout(function () {
-      error.style.display = 'none';
-      error.classList.remove("fadeOut");
-    }, 800);
-  }, 2000);
+	var error = document.getElementById('errormessage');
+	error.style.display = 'block';
+	error.classList.add('fadeIn');
+	document.getElementById("errormessage").innerHTML = errortext;
+	setTimeout(function () {
+		error.classList.add('fadeOut');
+		setTimeout(function () {
+			error.style.display = 'none';
+			error.classList.remove("fadeOut");
+		}, 800);
+	}, 2000);
 }
 
 function succesMessage(succestext) {
-  var succes = document.getElementById('succesmessage');
-  succes.style.display = 'block';
-  succes.classList.add('fadeIn');
-  document.getElementById("succesmessage").innerHTML = succestext;
-  setTimeout(function () {
-    succes.classList.add('fadeOut');
-    setTimeout(function () {
-      succes.style.display = 'none';
-      succes.classList.remove("fadeOut");
-    }, 800);
-  }, 2000);
+	var succes = document.getElementById('succesmessage');
+	succes.style.display = 'block';
+	succes.classList.add('fadeIn');
+	document.getElementById("succesmessage").innerHTML = succestext;
+	setTimeout(function () {
+		succes.classList.add('fadeOut');
+		setTimeout(function () {
+			succes.style.display = 'none';
+			succes.classList.remove("fadeOut");
+		}, 800);
+	}, 2000);
+}
+
+function clearInputFields () {
+	var inputFields = document.querySelectorAll('.addNew input');
+			for (let i = 0; i < inputFields.length; i++) {
+				inputFields[i].value = '';
+			}
+}
