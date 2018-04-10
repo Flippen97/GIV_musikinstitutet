@@ -18,7 +18,7 @@ function searchResult() {
 		.then((response) => response.json())
 		.then((searchResult) => {
 			//console.log(searchResult);
-			displayArtistSearch(searchResult);
+			displayTrackSearch(searchResult);
 		})
 		.catch((error) => {
 			console.log(error);
@@ -50,7 +50,7 @@ function displayArtistSearch(searchResult) {
 		resultItem.innerHTML =
 			`<p>Name: ${searchResult[i].name}</p>
              <p>Genre: ${genres(searchResult[i].genres)}</p>
-             <button class="delete" id=${searchResult[i].selfLink}>Delete</button>
+             <button class="delete" name="artists" id=${searchResult[i]._id}>Delete</button>
              `;
 		deleteButtons();
 		resultList.appendChild(resultItem);
@@ -382,15 +382,16 @@ function deleteButtons() {
 		headers: {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
-		},
+		}
 	};
 	
 	for (button of deleteButtons) {
 		button.addEventListener("click", function () {
 			var itemToDelete = this.id;
 			
-			console.log(this.id);
-			fetch(itemToDelete, deleteOptions)
+			console.log(itemToDelete);
+			console.log(this.name)
+			fetch(`https://folksa.ga/api/${this.name}/${this.id}?key=flat_eric`, deleteOptions)
 				.then((response) => response.json())
 				.then((deletedItem) => {
 					//console.log(deletedItem);
