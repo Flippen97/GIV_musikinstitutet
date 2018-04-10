@@ -1,8 +1,9 @@
-nav{
-  li{
+nav {
+  li {
     display: block;
   }
 }
+
 .toplistsWrapper {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -10,5 +11,75 @@ nav{
 }
 
 .hidden {
-	display: none;
+  display: none;
+}
+
+.flashMessage {
+  margin: 5px 0 5px 0;
+  height: 40px;
+}
+
+#errormessage {
+  width: 90%;
+  padding: 0 2.5% 0 2.5%;
+  margin: 0 0 0 2.5%;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  line-height: 40px;
+  height: 40px;
+  background-color: darkred;
+  color: white;
+  display: none;
+}
+
+#succesmessage {
+  width: 90%;
+  padding: 0 2.5% 0 2.5%;
+  margin: 0 0 0 2.5%;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  line-height: 40px;
+  height: 40px;
+  background-color: green;
+  color: white;
+  display: none;
+}
+
+/* Create a class that adds a CSS animation: 0 -> 1 */
+
+.fadeIn {
+  -webkit-animation: fadeIn 1000ms;
+  animation: fadeIn 1000ms;
+  opacity: 1;
+}
+
+/* Same with fadeout animation, from 1 -> 0 */
+
+.fadeOut {
+  -webkit-animation: fadeOut 1000ms;
+  animation: fadeOut 1000ms;
+  opacity: 0;
+}
+
+/* Keyframes animation is basically an ordinary
+transition from 0 to 1, no need to specify % */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0
+  }
+  to {
+    opacity: 1
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1
+  }
+  to {
+    opacity: 0
+  }
 }

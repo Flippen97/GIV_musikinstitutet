@@ -15,26 +15,30 @@
 
 			<input type="search" id="searchInput">
 			<select id="searchCategory">
-            <option value="tracks">Track</option>
-            <option value="artists">Artist</option>
-            <option value="albums">Album</option>
-            <option value="playlists">Playlist</option>
-          </select>
+				<option value="tracks">Track</option>
+				<option value="artists">Artist</option>
+				<option value="albums">Album</option>
+				<option value="playlists">Playlist</option>
+			</select>
 			<select id="searchOption">
-            <option value="title">Name</option>
-            <option value="genre">genre</option>
-          </select>
+				<option value="title">Name</option>
+				<option value="genre">genre</option>
+			</select>
 
 			<button id="searchButton">Submit this shit</button>
 		</nav>
 	</header>
+	<div class="flashMessage">
+		<div id="errormessage"></div>
+		<div id="succesmessage"></div>
+	</div>
 	<main>
-        <ul id="resultList">
-            
-        
-        
-        
-        </ul>
+		<ul id="resultList">
+
+
+
+
+		</ul>
 		<section class="toplistsWrapper">
 			<div class="topList">
 				<h2>Hottest Tracks</h2>
@@ -55,30 +59,46 @@
 		<section class="addNew">
 			<div>
 				<h2>Add new music</h2>
-					<label for="addCategory">What do you want to add?</label>
-					<select id="addCategory">
-						<option selected="selected">Choose category</option>
-						<option id="tracks">Track</option>
-						<option id="artists">Artist</option>
-						<option id="albums">Album</option>
-						<option id="playlists">Playlist</option>
-			  		</select>
-			  		<br/>
-			  		<div id="title" class="hidden">
+				<label for="addCategory">What do you want to add?</label>
+				<select id="addCategory">
+					<option selected="selected">Choose category</option>
+					<option id="tracks">Track</option>
+					<option id="artists">Artist</option>
+					<option id="albums">Album</option>
+					<option id="playlists">Playlist</option>
+				</select>
+				<br/>
+				<div id="title" class="hidden">
 					<label for="title">Title</label>
 					<input type="text">
-					</div><br/>
-					<div id="name" class="hidden"><label for="name">Name</label>
-					<input type="text"></div><br/>
-					<div id="artist" class="hidden"><label for="artist">Artist</label>
-					<input type="text"></div><br/>
-					<div id="album" class="hidden"><label for="album">Album</label>
-					<input type="text" ></div><br/>
-					<div id="genre" class="hidden"><label for="genre">Genre</label>
-					<input type="text"></div><br/>
-					<div id="createdBy" class="hidden"><label for="createdBy">Created by</label>
-					<input type="text"></div><br/>
-					<button id="addButton" class="hidden">Add</button>
+				</div>
+				<br/>
+				<div id="name" class="hidden">
+					<label for="name">Name</label>
+					<input type="text">
+				</div>
+				<br/>
+				<div id="artist" class="hidden">
+					<label for="artist">Artist</label>
+					<input type="text">
+				</div>
+				<br/>
+				<div id="album" class="hidden">
+					<label for="album">Album</label>
+					<input type="text">
+				</div>
+				<br/>
+				<div id="genre" class="hidden">
+					<label for="genre">Genre</label>
+					<input type="text">
+				</div>
+				<br/>
+				<div id="createdBy" class="hidden">
+					<label for="createdBy">Created by</label>
+					<input type="text">
+				</div>
+				<br/>
+				<button id="addButton" class="hidden">Add</button>
 
 				<!--			<form>
 						<label for="title">Title</label>

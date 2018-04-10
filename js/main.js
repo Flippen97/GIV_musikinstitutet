@@ -3,47 +3,60 @@
 })
 //Parameters for search menu
 
-var searchInput = document.getElementById('searchInput');
-var searchOption = document.getElementById('searchOption');
-var searchCategory = document.getElementById('searchCategory');
-const searchButton = document.getElementById("searchButton");
+searchParameters()
 
-searchButton.addEventListener("click", searchResult);
+function searchParameters() {
+  var searchInput = document.getElementById('searchInput');
+  var searchOption = document.getElementById('searchOption');
+  var searchCategory = document.getElementById('searchCategory');
+  const searchButton = document.getElementById("searchButton");
 
+  searchButton.addEventListener("click", function () {
 
+    if (searchCategory.value == "artists" && searchOption.value == "title") {
+      var URL = `https://folksa.ga/api/${searchCategory.value}?name=${searchInput.value}&key=flat_eric`;
+    } else if (searchCategory.value == "albums") {
+      var URL = `https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${searchInput.value}&populateArtists=true&key=flat_eric`;
+    } else {
+      var URL = `https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${searchInput.value}&key=flat_eric`;
+    }
+    searchResult(URL);
+  });
 
+}
 //fetch all search results based on parameters
-function searchResult() {
+function searchResult(URL) {
 
-	fetch(`https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${searchInput.value}&populateArtists=true&key=flat_eric`)
-		.then((response) => response.json())
-		.then((searchResult) => {
-			if (searchCategory.value == "tracks") {
-				alert("track")
-				displayTrackSearch(searchResult);
-			} else if (searchCategory.value == "artists") {
-				alert("artists")
-				displayArtistSearch(searchResult);
-			} else if (searchCategory.value == "albums") {
-				alert("albums")
-				displayAlbumSearch(searchResult)
-			} else if (searchCategory.value == "playlists") {
-				alert("playlists")
-				displayPlaylistSearch(searchResult)
-			}
-		})
-		.catch((error) => {
-			console.log(error);
-			alert('error');
-		});
+  fetch(URL)
+    .then((response) => response.json())
+    .then((searchResult) => {
+      console.log(searchCategory.value);
+      if (searchCategory.value == "tracks") {
+        displayTrackSearch(searchResult);
+      } else if (searchCategory.value == "artists") {
+        displayArtistSearch(searchResult);
+      } else if (searchCategory.value == "albums") {
+        displayAlbumSearch(searchResult)
+      } else if (searchCategory.value == "playlists") {
+        displayPlaylistSearch(searchResult)
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      alert('error');
+    });
 }
 
 function genres(input) {
-	var genre = '';
-	for (let i = 0; i < input.length; i++) {
-		genre += `${input[i]} `;
-	}
-	return genre;
+  var genre = '';
+  for (let i = 0; i < input.length; i++) {
+    if (i >= 1) {
+      genre += `, `;
+    }
+    genre += `${input[i]}`;
+  }
+  return genre;
+
 }
 
 function artists(input) {
@@ -65,6 +78,7 @@ function displayArtistSearch(searchResult) {
              <p>Genre: ${genres(searchResult[i].genres)}</p>
              <button class="delete" name="artists" id=${searchResult[i]._id}>Delete</button>
              `;
+
 		resultList.appendChild(resultItem);
 	}
 	deleteButtons();
@@ -89,6 +103,7 @@ function displayTrackSearch(searchResult) {
 				<button>Submit</button>
             </div>
 			<button class="show">Show more</button>
+
 			<button class="delete" name="tracks" id=${searchResult[i]._id}>Delete track</button>`;
 		resultItem.id = 
 		resultList.appendChild(resultItem);
@@ -102,11 +117,16 @@ function displayPlaylistSearch(searchResult) {
 	resultList.innerHTML = '';
 	for (let i = 0; i < searchResult.length; i++) {
 
-		var resultItem = document.createElement('li');
-		resultItem.innerHTML =
-			`<p>Playlist: ${searchResult[i].title}</p>
-             <p>Genre: ${searchResult[i].genres}</p>
-             <button class="delete" name="playlists" id=${searchResult[i]._id}>Delete</button>
+    var resultItem = document.createElement('li');
+    resultItem.innerHTML =
+      ` <p>Playlist: ${searchResult[i].title}</p>
+          <p>Genre: ${searchResult[i].genres}</p>
+        <div class="hidden">
+             <h4>Rate track</h4>
+        </div>
+        <button class="show">Show more</button>
+        <button class="delete" name="playlists" id=${searchResult[i]._id}>Delete</button>
+
             `;
 		resultList.appendChild(resultItem);
 	}
@@ -126,7 +146,6 @@ function displayAlbumSearch(searchResult) {
       
       <div class="hidden">
           <h4>Rate track</h4>
-          
       </div>
       <button class="show">Show more</button>
       <button class="delete" name="albums" id=${searchResult[i]._id}>Delete track</button>`;
@@ -139,19 +158,19 @@ function displayAlbumSearch(searchResult) {
 //Show more button for every result item. It shows the content of a hidden div.
 
 function showMoreButtons() {
-	var showButtons = document.getElementsByClassName("show");
-	for (button of showButtons) {
-		button.addEventListener("click", function () {
-			var hiddenDiv = this.previousElementSibling;
-			hiddenDiv.classList.toggle("hidden");
+  var showButtons = document.getElementsByClassName("show");
+  for (button of showButtons) {
+    button.addEventListener("click", function () {
+      var hiddenDiv = this.previousElementSibling;
+      hiddenDiv.classList.toggle("hidden");
 
-			if (this.innerHTML == "Show more") {
-				this.innerHTML = "Hide"
-			} else if (this.innerHTML == "Hide") {
-				this.innerHTML = "Show more";
-			}
-		})
-	}
+      if (this.innerHTML == "Show more") {
+        this.innerHTML = "Hide"
+      } else if (this.innerHTML == "Hide") {
+        this.innerHTML = "Show more";
+      }
+    })
+  }
 
 }
 
@@ -336,43 +355,43 @@ function addPlaylist() {
 
 //Add comment to playlist
 function addCommentPlaylist() {
-	/*
-	  let comment = {
-	    playlist: "5aae312ee3534b03981f6521",
-	    body: "Wow, great playlist!",
-	    username: "The commenter"
-	  }
 
-	  fetch(`https://folksa.ga/api/playlists/5aae312ee3534b03981f6521/comments`,{
-	        method: 'POST',
-	        headers: {
-	            'Accept': 'application/json',
-	            'Content-Type': 'application/json'
-	        },
-	        body: JSON.stringify(comment)
-	    })
-	    .then((response) => response.json())
-	    .then((playlist) => {
-	    console.log(playlist);
-	  });*/
+  let comment = {
+    playlist: "5aae312ee3534b03981f6521",
+    body: "Wow, great playlist!",
+    username: "The commenter"
+  }
+
+  fetch(`https://folksa.ga/api/playlists/5aae312ee3534b03981f6521/comments`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(comment)
+    })
+    .then((response) => response.json())
+    .then((playlist) => {
+      console.log(playlist);
+    });
 }
 
 //Vote on 
 function vote() {
-	fetch(`https://folksa.ga/api/${category}/${categoryID}/vote`, {
-			method: 'POST',
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				rating: 9
-			})
-		})
-		.then((response) => response.json())
-		.then((playlist) => {
-			console.log(playlist);
-		});
+  fetch(`https://folksa.ga/api/${category}/${categoryID}/vote`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        rating: 9
+      })
+    })
+    .then((response) => response.json())
+    .then((playlist) => {
+      console.log(playlist);
+    });
 }
 
 //Deletefunction
@@ -392,10 +411,37 @@ function deleteButtons() {
 			fetch(`https://folksa.ga/api/${this.name}/${this.id}?key=flat_eric`, deleteOptions)
 				.then((response) => response.json())
 				.then((deletedItem) => {
-					//console.log(deletedItem);
+					succesMessage("Item was deleted");
 				});
 			var listItemToDelete = this.parentElement;
 		listItemToDelete.parentNode.removeChild(listItemToDelete);
 		})
 	}
 }
+
+function errorMessage(errortext) {
+  var error = document.getElementById('errormessage');
+  error.style.display = 'block';
+  error.classList.add('fadeIn');
+  document.getElementById("errormessage").innerHTML = errortext;
+  setTimeout(function () {
+    error.classList.add('fadeOut');
+    setTimeout(function () {
+      error.style.display = 'none';
+      error.classList.remove("fadeOut");
+    }, 800);
+  }, 2000);
+}
+
+function succesMessage(succestext) {
+  var succes = document.getElementById('succesmessage');
+  succes.style.display = 'block';
+  succes.classList.add('fadeIn');
+  document.getElementById("succesmessage").innerHTML = succestext;
+  setTimeout(function () {
+    succes.classList.add('fadeOut');
+    setTimeout(function () {
+      succes.style.display = 'none';
+      succes.classList.remove("fadeOut");
+    }, 800);
+  }, 2000);
