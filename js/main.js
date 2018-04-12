@@ -423,7 +423,6 @@ function eventlistnerVote() {
   var votes = document.getElementsByClassName("vote");
   for (let vote of votes) {
     vote.addEventListener("click", function () {
-      console.log(this)
       voting(this);
     })
   }
