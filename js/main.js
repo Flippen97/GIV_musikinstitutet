@@ -75,6 +75,14 @@ function loopOption1To10() {
   return option
 }
 
+function loopTrcksPlaylist(input) {
+  var tracks = '';
+  for (let i = 0; i < input.length; i++) {
+    tracks += `<p>Track${[i + 1]}: ${input[i].title}</p>`;
+  }
+  return tracks;
+}
+
 function displayArtistSearch(searchResult) {
   var resultList = document.getElementById('resultList');
   resultList.innerHTML = '';
@@ -132,12 +140,15 @@ function displayPlaylistSearch(searchResult) {
   var resultList = document.getElementById('resultList');
   resultList.innerHTML = '';
   for (let i = 0; i < searchResult.length; i++) {
-
+    console.log(searchResult[i]);
     var resultItem = document.createElement('li');
     resultItem.innerHTML =
       ` <p>Playlist: ${searchResult[i].title}</p>
         <p>Genre: ${searchResult[i].genres}</p>
         <div class="hidden">
+          <div class="list-tracks">
+            ${loopTrcksPlaylist(searchResult[i].tracks)}
+          </div>
           <div class="rate">
             <h4>Rate Playlist</h4>
             <select id="vote">
@@ -146,8 +157,10 @@ function displayPlaylistSearch(searchResult) {
             <button class="vote" name="playlists" id=${searchResult[i]._id}>vote</button>
           </div>
           <div class="comment-section">
-            <input type="text" id="commentUserName">
-            <input type="text" id="commentContent">
+            Name: <input type="text" id="commentUserName">
+            </br>
+            Content: <input type="text" id="commentContent">
+            </br>
             <button class="comment" id=${searchResult[i]._id}>Comment</button>
           </div>
         </div>
@@ -159,8 +172,8 @@ function displayPlaylistSearch(searchResult) {
   }
   showMoreButtons();
   deleteButtons();
-  eventlistnerAddcommentPlaylist()
-  eventlistnerVote()
+  eventlistnerAddcommentPlaylist();
+  eventlistnerVote();
 }
 
 function displayAlbumSearch(searchResult) {
@@ -391,7 +404,6 @@ function eventlistnerAddcommentPlaylist() {
     })
   }
 }
-
 
 //Add comment to playlist
 function addCommentPlaylist(commentParameters) {
