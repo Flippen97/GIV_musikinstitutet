@@ -100,7 +100,7 @@ function displayTrackSearch(searchResult) {
 				<h4>Add to playlist</h4>
 				<label for="addToPlaylist">Playlist name</label>
 				<input type="text" id="addToPlaylist">
-				<button>Submit</button>
+				<button id="addToPlaylistButton>Submit</button>
             </div>
 			<button class="show">Show more</button>
 
@@ -232,16 +232,16 @@ function formInputFields() {
 document.getElementById('addButton').addEventListener('click', function () {
 	switch (addCategory.value) {
 		case 'Artist':
-			addArtist();
+			addArtist().then(clearInputFields);
 			break;
 		case 'Album':
-			addArtist().then(addAlbum);
+			addArtist().then(addAlbum).then(clearInputFields);
 			break;
 		case 'Track':
-			addArtist().then(addAlbum).then(addTrack);
+			addArtist().then(addAlbum).then(addTrack).then(clearInputFields);
 			break;
 		case 'Playlist':
-			addPlaylist();
+			addPlaylist().then(clearInputFields);
 			break;
 	}
 });
@@ -325,7 +325,6 @@ function addTrack(newAlbum) {
 		.catch((error) => {
 			console.log('Request failed: ', error);
 		});
-	     clearInputFields();
 }
 
 function addPlaylist() {
