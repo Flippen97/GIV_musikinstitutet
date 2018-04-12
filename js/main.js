@@ -101,10 +101,16 @@ function displayTrackSearch(searchResult) {
       `<h3>Title: ${searchResult[i].title}</h3>
 			<p>Artist: ${artists(searchResult[i].artists)}</p>
 			<p>Genre: ${genres(searchResult[i].genres)}</p>
-            <div class="hidden">
-                <p>Album: ${searchResult[i].album.title}</p>
+      <div class="hidden">
+        <p>Album: ${searchResult[i].album.title}</p>
 				<p>${searchResult[i].ratings}</p>
-				<h4>Rate track</h4>
+				<div class="rate">
+            <h4>Rate Track</h4>
+            <select id="vote">
+              ${loopOption1To10()}
+            </select>
+            <button class="vote" name="tracks" id=${searchResult[i]._id}>vote</button>
+          </div>
 				<h4>Add to playlist</h4>
 				<label for="addToPlaylist">Playlist name</label>
 				<input type="text" id="addToPlaylist">
@@ -118,13 +124,14 @@ function displayTrackSearch(searchResult) {
   }
   showMoreButtons();
   deleteButtons();
+  eventlistnerVote()
 }
 
 function displayPlaylistSearch(searchResult) {
   var resultList = document.getElementById('resultList');
   resultList.innerHTML = '';
   for (let i = 0; i < searchResult.length; i++) {
-    console.log(searchResult[i])
+
     var resultItem = document.createElement('li');
     resultItem.innerHTML =
       ` <p>Playlist: ${searchResult[i].title}</p>
@@ -166,7 +173,13 @@ function displayAlbumSearch(searchResult) {
       <p>Artist: ${artists(searchResult[i].artists)}</p>
       
       <div class="hidden">
-          <h4>Rate track</h4>
+        <div class="rate">
+          <h4>Rate Album</h4>
+          <select id="vote">
+            ${loopOption1To10()}
+          </select>
+          <button class="vote" name="albums" id=${searchResult[i]._id}>vote</button>
+        </div>
       </div>
       <button class="show">Show more</button>
       <button class="delete" name="albums" id=${searchResult[i]._id}>Delete track</button>`;
@@ -174,7 +187,7 @@ function displayAlbumSearch(searchResult) {
   }
   showMoreButtons();
   deleteButtons();
-
+  eventlistnerVote()
 }
 
 //Show more button for every result item. It shows the content of a hidden div.
@@ -410,21 +423,26 @@ function eventlistnerVote() {
   var votes = document.getElementsByClassName("vote");
   for (let vote of votes) {
     vote.addEventListener("click", function () {
-      alert("hej");
-      //vote(this);
+      console.log(this)
+      voting(this);
     })
   }
 }
+
 //Vote on 
-function vote() {
-  fetch(`https://folksa.ga/api/${category}/${categoryID}/vote`, {
+function voting(voteParameters) {
+  var category = voteParameters.name;
+  var categoryId = voteParameters.id;
+  var rating = voteParameters.previousElementSibling.value;
+
+  fetch(`https://folksa.ga/api/${category}/${categoryId}/vote?key=flat_eric`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        rating: 9
+        rating: rating
       })
     })
     .then((response) => response.json())
