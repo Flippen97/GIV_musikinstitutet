@@ -1,50 +1,48 @@
 ({
-	"plugins": ["jsdom-quokka-plugin"]
+  "plugins": ["jsdom-quokka-plugin"]
 })
 //Parameters for search menu
 
 searchParameters()
 
 function searchParameters() {
-	var searchInput = document.getElementById('searchInput');
-	var searchOption = document.getElementById('searchOption');
-	var searchCategory = document.getElementById('searchCategory');
-	const searchButton = document.getElementById("searchButton");
+  var searchInput = document.getElementById('searchInput');
+  var searchOption = document.getElementById('searchOption');
+  var searchCategory = document.getElementById('searchCategory');
+  const searchButton = document.getElementById("searchButton");
 
-	searchButton.addEventListener("click", function () {
+  searchButton.addEventListener("click", function () {
 
-		if (searchCategory.value == "artists" && searchOption.value == "title") {
-			var URL = `https://folksa.ga/api/${searchCategory.value}?name=${searchInput.value}&key=flat_eric`;
-		} else if (searchCategory.value == "albums") {
-			var URL = `https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${searchInput.value}&populateArtists=true&key=flat_eric`;
-		} else {
-			var URL = `https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${searchInput.value}&key=flat_eric`;
-		}
-		searchResult(URL);
-	});
+    if (searchCategory.value == "artists" && searchOption.value == "title") {
+      var URL = `https://folksa.ga/api/${searchCategory.value}?name=${searchInput.value}&key=flat_eric`;
+    } else if (searchCategory.value == "albums") {
+      var URL = `https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${searchInput.value}&populateArtists=true&key=flat_eric`;
+    } else {
+      var URL = `https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${searchInput.value}&key=flat_eric`;
+    }
+    searchResult(URL);
+  });
 
 }
 //fetch all search results based on parameters
 function searchResult(URL) {
-
-	fetch(URL)
-		.then((response) => response.json())
-		.then((searchResult) => {
-			console.log(searchCategory.value);
-			if (searchCategory.value == "tracks") {
-				displayTrackSearch(searchResult);
-			} else if (searchCategory.value == "artists") {
-				displayArtistSearch(searchResult);
-			} else if (searchCategory.value == "albums") {
-				displayAlbumSearch(searchResult)
-			} else if (searchCategory.value == "playlists") {
-				displayPlaylistSearch(searchResult)
-			}
-		})
-		.catch((error) => {
-			console.log(error);
-			alert('error');
-		});
+  fetch(URL)
+    .then((response) => response.json())
+    .then((searchResult) => {
+      if (searchCategory.value == "tracks") {
+        displayTrackSearch(searchResult);
+      } else if (searchCategory.value == "artists") {
+        displayArtistSearch(searchResult);
+      } else if (searchCategory.value == "albums") {
+        displayAlbumSearch(searchResult)
+      } else if (searchCategory.value == "playlists") {
+        displayPlaylistSearch(searchResult)
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      alert('error');
+    });
 }
 
 function genres(input) {
@@ -60,43 +58,59 @@ function genres(input) {
 }
 
 function artists(input) {
-	var artist = '';
-	for (let i = 0; i < input.length; i++) {
-		artist += `${input[i].name} `;
-	}
-	return artist;
+  var artist = '';
+  for (let i = 0; i < input.length; i++) {
+    artist += `${input[i].name} `;
+  }
+  return artist;
+}
+
+function loopOption1To10() {
+  var option = '';
+  for (let i = 1; i <= 10; i++) {
+    option += `
+    <option id="${[i]}">${[i]}</option>
+    `;
+  }
+  return option
 }
 
 function displayArtistSearch(searchResult) {
-	var resultList = document.getElementById('resultList');
-	resultList.innerHTML = '';
-	for (let i = 0; i < searchResult.length; i++) {
+  var resultList = document.getElementById('resultList');
+  resultList.innerHTML = '';
+  for (let i = 0; i < searchResult.length; i++) {
 
-		var resultItem = document.createElement('li');
-		resultItem.innerHTML =
-			`<p>Name: ${searchResult[i].name}</p>
+    var resultItem = document.createElement('li');
+    resultItem.innerHTML =
+      `<p>Name: ${searchResult[i].name}</p>
              <p>Genre: ${genres(searchResult[i].genres)}</p>
              <button class="delete" name="artists" id=${searchResult[i]._id}>Delete</button>
              `;
 
-		resultList.appendChild(resultItem);
-	}
-	deleteButtons();
+    resultList.appendChild(resultItem);
+  }
+  deleteButtons();
 }
 
 function displayTrackSearch(searchResult) {
-	var resultList = document.getElementById('resultList');
-	resultList.innerHTML = '';
-	for (let i = 0; i < searchResult.length; i++) {
-		var resultItem = document.createElement('li');
-		resultItem.innerHTML =
-			`<h3>Title: ${searchResult[i].title}</h3>
+  var resultList = document.getElementById('resultList');
+  resultList.innerHTML = '';
+  for (let i = 0; i < searchResult.length; i++) {
+    var resultItem = document.createElement('li');
+    resultItem.innerHTML =
+      `<h3>Title: ${searchResult[i].title}</h3>
 			<p>Artist: ${artists(searchResult[i].artists)}</p>
 			<p>Genre: ${genres(searchResult[i].genres)}</p>
-            <div class="hidden">
-                <p>Album: ${searchResult[i].album.title}</p>
+      <div class="hidden">
+        <p>Album: ${searchResult[i].album.title}</p>
 				<p>${searchResult[i].ratings}</p>
-				<h4>Rate track</h4>
+				<div class="rate">
+            <h4>Rate Track</h4>
+            <select id="vote">
+              ${loopOption1To10()}
+            </select>
+            <button class="vote" name="tracks" id=${searchResult[i]._id}>vote</button>
+          </div>
 				<h4>Add to playlist</h4>
 				<label for="addToPlaylist">Playlist name</label>
 				<input type="text" id="addToPlaylist">
@@ -105,73 +119,94 @@ function displayTrackSearch(searchResult) {
 			<button class="show">Show more</button>
 
 			<button class="delete" name="tracks" id=${searchResult[i]._id}>Delete track</button>`;
-		resultItem.id =
-			resultList.appendChild(resultItem);
-	}
-	showMoreButtons();
-	deleteButtons();
+    resultItem.id =
+      resultList.appendChild(resultItem);
+  }
+  showMoreButtons();
+  deleteButtons();
+  eventlistnerVote()
+
 }
 
 function displayPlaylistSearch(searchResult) {
-	var resultList = document.getElementById('resultList');
-	resultList.innerHTML = '';
-	for (let i = 0; i < searchResult.length; i++) {
-
-		var resultItem = document.createElement('li');
-		resultItem.innerHTML =
-			` <p>Playlist: ${searchResult[i].title}</p>
-          <p>Genre: ${searchResult[i].genres}</p>
+  var resultList = document.getElementById('resultList');
+  resultList.innerHTML = '';
+  for (let i = 0; i < searchResult.length; i++) {
+    
+    var resultItem = document.createElement('li');
+    resultItem.innerHTML =
+      ` <p>Playlist: ${searchResult[i].title}</p>
+        <p>Genre: ${searchResult[i].genres}</p>
         <div class="hidden">
-             <h4>Rate track</h4>
+          <div class="rate">
+            <h4>Rate Playlist</h4>
+            <select id="vote">
+              ${loopOption1To10()}
+            </select>
+            <button class="vote" name="playlists" id=${searchResult[i]._id}>vote</button>
+          </div>
+          <div class="comment">
+            <input type="text" id="commentUserName">
+            <input type="text" id="commentContent">
+            <button class="comment" id=${searchResult[i]._id}>Comment</button>
+          </div>
         </div>
         <button class="show">Show more</button>
         <button class="delete" name="playlists" id=${searchResult[i]._id}>Delete</button>
 
             `;
-		resultList.appendChild(resultItem);
-	}
-	showMoreButtons();
-	deleteButtons();
+    resultList.appendChild(resultItem);
+  }
+  showMoreButtons();
+  deleteButtons();
+  eventlistnerAddcommentPlaylist()
+  eventlistnerVote()
 }
 
 function displayAlbumSearch(searchResult) {
-	var resultList = document.getElementById('resultList');
-	resultList.innerHTML = '';
-	for (let i = 0; i < searchResult.length; i++) {
+  var resultList = document.getElementById('resultList');
+  resultList.innerHTML = '';
+  for (let i = 0; i < searchResult.length; i++) {
 
-		var resultItem = document.createElement('li');
-		resultItem.innerHTML =
-			`<p>Album title: ${searchResult[i].title}</p>
+    var resultItem = document.createElement('li');
+    resultItem.innerHTML =
+      `<p>Album title: ${searchResult[i].title}</p>
       <p>Artist: ${artists(searchResult[i].artists)}</p>
       
       <div class="hidden">
-          <h4>Rate track</h4>
+        <div class="rate">
+          <h4>Rate Album</h4>
+          <select id="vote">
+            ${loopOption1To10()}
+          </select>
+          <button class="vote" name="albums" id=${searchResult[i]._id}>vote</button>
+        </div>
       </div>
       <button class="show">Show more</button>
       <button class="delete" name="albums" id=${searchResult[i]._id}>Delete track</button>`;
-		resultList.appendChild(resultItem);
-	}
-	showMoreButtons();
-	deleteButtons();
+    resultList.appendChild(resultItem);
+  }
+  showMoreButtons();
+  deleteButtons();
+  eventlistnerVote()
 }
 
 //Show more button for every result item. It shows the content of a hidden div.
 
 function showMoreButtons() {
-	var showButtons = document.getElementsByClassName("show");
-	for (button of showButtons) {
-		button.addEventListener("click", function () {
-			var hiddenDiv = this.previousElementSibling;
-			hiddenDiv.classList.toggle("hidden");
+  var showButtons = document.getElementsByClassName("show");
+  for (button of showButtons) {
+    button.addEventListener("click", function () {
+      var hiddenDiv = this.previousElementSibling;
+      hiddenDiv.classList.toggle("hidden");
 
-			if (this.innerHTML == "Show more") {
-				this.innerHTML = "Hide"
-			} else if (this.innerHTML == "Hide") {
-				this.innerHTML = "Show more";
-			}
-		})
-	}
-
+      if (this.innerHTML == "Show more") {
+        this.innerHTML = "Hide"
+      } else if (this.innerHTML == "Hide") {
+        this.innerHTML = "Show more";
+      }
+    })
+  }
 }
 
 //Code for adding new content below
@@ -350,45 +385,68 @@ function addPlaylist() {
 		});
 }
 
+function eventlistnerAddcommentPlaylist() {
+  var commentButtons = document.getElementsByClassName("comment");
+  for (let commentButton of commentButtons) {
+    commentButton.addEventListener("click", function () {
+      addCommentPlaylist(this);
+    })
+  }
+}
+
+
 //Add comment to playlist
-function addCommentPlaylist() {
+function addCommentPlaylist(commentParameters) {
+  let comment = {
+    playlist: commentParameters.id,
+    body: commentParameters.previousElementSibling.value,
+    username: commentParameters.previousElementSibling.previousElementSibling.value
+  }
 
-	let comment = {
-		playlist: "5aae312ee3534b03981f6521",
-		body: "Wow, great playlist!",
-		username: "The commenter"
-	}
+  fetch(`https://folksa.ga/api/playlists/${commentParameters.id}/comments?key=flat_eric`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(comment)
+    })
+    .then((response) => response.json())
+    .then((playlist) => {
+      console.log(playlist);
+    });
+}
 
-	fetch(`https://folksa.ga/api/playlists/5aae312ee3534b03981f6521/comments`, {
-			method: 'POST',
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(comment)
-		})
-		.then((response) => response.json())
-		.then((playlist) => {
-			console.log(playlist);
-		});
+
+function eventlistnerVote() {
+  var votes = document.getElementsByClassName("vote");
+  for (let vote of votes) {
+    vote.addEventListener("click", function () {
+      voting(this);
+    })
+  }
 }
 
 //Vote on 
-function vote() {
-	fetch(`https://folksa.ga/api/${category}/${categoryID}/vote`, {
-			method: 'POST',
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				rating: 9
-			})
-		})
-		.then((response) => response.json())
-		.then((playlist) => {
-			console.log(playlist);
-		});
+function voting(voteParameters) {
+  var category = voteParameters.name;
+  var categoryId = voteParameters.id;
+  var rating = voteParameters.previousElementSibling.value;
+
+  fetch(`https://folksa.ga/api/${category}/${categoryId}/vote?key=flat_eric`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        rating: rating
+      })
+    })
+    .then((response) => response.json())
+    .then((playlist) => {
+      console.log(playlist);
+    });
 }
 
 //Deletefunction
@@ -431,6 +489,7 @@ function errorMessage(errortext) {
 }
 
 function succesMessage(succestext) {
+
 	var succes = document.getElementById('succesmessage');
 	succes.style.display = 'block';
 	succes.classList.add('fadeIn');
