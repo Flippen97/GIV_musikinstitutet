@@ -75,6 +75,39 @@ function loopOption1To10() {
   return option
 }
 
+function loopTrcksPlaylist(input) {
+  var tracks = '';
+  for (let i = 0; i < input.length; i++) {
+    tracks += `<p>Track${[i + 1]}: ${input[i].title}</p>`;
+  }
+  return tracks;
+}
+
+
+
+function getCommentsPlaylist(playlistId) {
+  var array = [];
+  fetch(`https://folksa.ga/api/playlists/${playlistId}/comments?key=flat_eric`)
+    .then((response) => response.json())
+    .then((comments) => {
+      listCommments(comments)
+    });
+
+  function listCommments(input) {
+    var listOfComments = document.getElementById(`comment${playlistId}`);
+
+    var comment = '';
+    for (let i = 0; i < input.length; i++) {
+      console.log(input)
+      comment += `
+        <p>Username: ${input[i].username}</p>
+        <p>Content: ${input[i].body}</p>
+        `;
+    }
+    listOfComments.innerHTML = comment;
+  }
+}
+
 function displayArtistSearch(searchResult) {
   var resultList = document.getElementById('resultList');
   resultList.innerHTML = '';
@@ -132,12 +165,15 @@ function displayPlaylistSearch(searchResult) {
   var resultList = document.getElementById('resultList');
   resultList.innerHTML = '';
   for (let i = 0; i < searchResult.length; i++) {
-
+    console.log(searchResult[i]);
     var resultItem = document.createElement('li');
     resultItem.innerHTML =
       ` <p>Playlist: ${searchResult[i].title}</p>
         <p>Genre: ${searchResult[i].genres}</p>
         <div class="hidden">
+          <div class="list-tracks">
+            ${loopTrcksPlaylist(searchResult[i].tracks)}
+          </div>
           <div class="rate">
             <h4>Rate Playlist</h4>
             <select id="vote">
@@ -146,7 +182,11 @@ function displayPlaylistSearch(searchResult) {
             <button class="vote" name="playlists" id=${searchResult[i]._id}>vote</button>
           </div>
           <div class="comment-section">
+            <div class="list-of-comments" id="comment${searchResult[i]._id}"></div>
+            <h4>Comment Playlist</h4>
+            <label for="commentUserName"> Name: </label>
             <input type="text" id="commentUserName">
+            <label for="commentContent">Content:</label>
             <input type="text" id="commentContent">
             <button class="comment" id=${searchResult[i]._id}>Comment</button>
           </div>
@@ -156,11 +196,12 @@ function displayPlaylistSearch(searchResult) {
 
             `;
     resultList.appendChild(resultItem);
+    getCommentsPlaylist(searchResult[i]._id)
   }
   showMoreButtons();
   deleteButtons();
-  eventlistnerAddcommentPlaylist()
-  eventlistnerVote()
+  eventlistnerAddcommentPlaylist();
+  eventlistnerVote();
 }
 
 function displayAlbumSearch(searchResult) {
@@ -392,13 +433,12 @@ function eventlistnerAddcommentPlaylist() {
   }
 }
 
-
 //Add comment to playlist
 function addCommentPlaylist(commentParameters) {
   let comment = {
     playlist: commentParameters.id,
     body: commentParameters.previousElementSibling.value,
-    username: commentParameters.previousElementSibling.previousElementSibling.value
+    username: commentParameters.previousElementSibling.previousElementSibling.previousElementSibling.value
   }
 
   fetch(`https://folksa.ga/api/playlists/${commentParameters.id}/comments?key=flat_eric`, {
