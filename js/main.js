@@ -83,6 +83,31 @@ function loopTrcksPlaylist(input) {
   return tracks;
 }
 
+
+
+function getCommentsPlaylist(playlistId) {
+  var array = [];
+  fetch(`https://folksa.ga/api/playlists/${playlistId}/comments?key=flat_eric`)
+    .then((response) => response.json())
+    .then((comments) => {
+      listCommments(comments)
+    });
+
+  function listCommments(input) {
+    var listOfComments = document.getElementById(`comment${playlistId}`);
+
+    var comment = '';
+    for (let i = 0; i < input.length; i++) {
+      console.log(input)
+      comment += `
+        <p>Username: ${input[i].username}</p>
+        <p>Content: ${input[i].body}</p>
+        `;
+    }
+    listOfComments.innerHTML = comment;
+  }
+}
+
 function displayArtistSearch(searchResult) {
   var resultList = document.getElementById('resultList');
   resultList.innerHTML = '';
@@ -157,10 +182,12 @@ function displayPlaylistSearch(searchResult) {
             <button class="vote" name="playlists" id=${searchResult[i]._id}>vote</button>
           </div>
           <div class="comment-section">
-            Name: <input type="text" id="commentUserName">
-            </br>
-            Content: <input type="text" id="commentContent">
-            </br>
+            <div class="list-of-comments" id="comment${searchResult[i]._id}"></div>
+            <h4>Comment Playlist</h4>
+            <label for="commentUserName"> Name: </label>
+            <input type="text" id="commentUserName">
+            <label for="commentContent">Content:</label>
+            <input type="text" id="commentContent">
             <button class="comment" id=${searchResult[i]._id}>Comment</button>
           </div>
         </div>
@@ -169,6 +196,7 @@ function displayPlaylistSearch(searchResult) {
 
             `;
     resultList.appendChild(resultItem);
+    getCommentsPlaylist(searchResult[i]._id)
   }
   showMoreButtons();
   deleteButtons();
@@ -410,7 +438,7 @@ function addCommentPlaylist(commentParameters) {
   let comment = {
     playlist: commentParameters.id,
     body: commentParameters.previousElementSibling.value,
-    username: commentParameters.previousElementSibling.previousElementSibling.value
+    username: commentParameters.previousElementSibling.previousElementSibling.previousElementSibling.value
   }
 
   fetch(`https://folksa.ga/api/playlists/${commentParameters.id}/comments?key=flat_eric`, {
