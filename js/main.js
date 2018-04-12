@@ -145,7 +145,7 @@ function displayPlaylistSearch(searchResult) {
             </select>
             <button class="vote" name="playlists" id=${searchResult[i]._id}>vote</button>
           </div>
-          <div class="comment">
+          <div class="comment-section">
             <input type="text" id="commentUserName">
             <input type="text" id="commentContent">
             <button class="comment" id=${searchResult[i]._id}>Comment</button>
