@@ -42,7 +42,7 @@ nav{
     font-size: 10px;
     background-color: #FFCC00;
     color: black;
-    border: 1px solid #000;
+    border: 2px solid #000;
     
 
 }
@@ -55,7 +55,11 @@ nav{
     background-repeat: no-repeat;
     overflow: scroll;
     height: 100vh;
+    color:white;
+    background-color: rgba(0, 0, 0, 0.6);
+    background-blend-mode: darken;
 }
+
 
 
 /* Call to action banner */
