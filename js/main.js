@@ -31,18 +31,22 @@ function searchResult(URL) {
     .then((searchResult) => {
       if (searchCategory.value == "tracks") {
         displayTrackSearch(searchResult);
+        succesMessage("You searched for track");
       } else if (searchCategory.value == "artists") {
         displayArtistSearch(searchResult);
+        succesMessage("You searched for artist");
       } else if (searchCategory.value == "albums") {
         displayAlbumSearch(searchResult)
+        succesMessage("You searched for album");
       } else if (searchCategory.value == "playlists") {
         displayPlaylistSearch(searchResult)
+        succesMessage("You searched for playlist");
       }
     })
     .catch((error) => {
-      console.log(error);
-      alert('error');
-    });
+      console.log(error)
+      errorMessage(`Request failed: Could not fetch search`);
+    });;
 }
 
 function genres(input) {
@@ -83,29 +87,37 @@ function loopTrcksPlaylist(input) {
   return tracks;
 }
 
-
-
 function getCommentsPlaylist(playlistId) {
   var array = [];
   fetch(`https://folksa.ga/api/playlists/${playlistId}/comments?key=flat_eric`)
     .then((response) => response.json())
     .then((comments) => {
-      listCommments(comments)
+      listCommments(comments, playlistId)
+    })
+    .catch((error) => {
+      errorMessage(`Request failed: Could not fetch comments`);
     });
+}
 
-  function listCommments(input) {
-    var listOfComments = document.getElementById(`comment${playlistId}`);
+function listCommments(input, playlistId) {
+  var listOfComments = document.getElementById(`comment${playlistId}`);
 
-    var comment = '';
-    for (let i = 0; i < input.length; i++) {
-      console.log(input)
-      comment += `
-        <p>Username: ${input[i].username}</p>
-        <p>Content: ${input[i].body}</p>
-        `;
-    }
-    listOfComments.innerHTML = comment;
+  var comment = '';
+  for (let i = 0; i < input.length; i++) {
+    comment += `
+      <div class="comment">
+      <p>Username: ${input[i].username}</p>
+      <p>Content: ${input[i].body}</p>
+      <button class="delete" name="comments" data-id="${input[i]._id}" id="delete${input[i]._id}">Delete comment</button>
+      </div>
+      `;
   }
+  listOfComments.innerHTML = comment;
+
+  for (let i = 0; i < input.length; i++) {
+    deleteCommentButtons(input[i]._id)
+  }
+
 }
 
 function displayArtistSearch(searchResult) {
@@ -198,10 +210,11 @@ function displayPlaylistSearch(searchResult) {
     resultList.appendChild(resultItem);
     getCommentsPlaylist(searchResult[i]._id)
   }
-  showMoreButtons();
   deleteButtons();
+  showMoreButtons();
   eventlistnerAddcommentPlaylist();
   eventlistnerVote();
+
 }
 
 function displayAlbumSearch(searchResult) {
@@ -341,10 +354,11 @@ function addArtist() {
     .then((response) => response.json())
     .then((postedArtist) => {
       var newArtist = postedArtist;
+      succesMessage("Artist was added");
       return newArtist;
     })
     .catch((error) => {
-      console.log('Request failed: ', error);
+      errorMessage(`Request failed: Could not ad artist`);
     });
 }
 
@@ -369,10 +383,11 @@ function addAlbum(newArtist) {
     .then((postedAlbum) => {
       var newAlbum = postedAlbum;
       console.log(newAlbum);
+      succesMessage("Album was added");
       return newAlbum;
     })
     .catch((error) => {
-      console.log('Request failed: ', error);
+      eerrorMessage(`Request failed: Could not ad album`);
     });
 }
 
@@ -396,9 +411,11 @@ function addTrack(newAlbum) {
 
   fetch('https://folksa.ga/api/tracks?key=flat_eric', postOptions)
     .then((response) => response.json())
-    .then((postedTrack) => {})
+    .then((postedTrack) => {
+      succesMessage("Track was added");
+    })
     .catch((error) => {
-      console.log('Request failed: ', error);
+      errorMessage(`Request failed: Could not ad track`);
     });
 }
 
@@ -418,9 +435,11 @@ function addPlaylist() {
 
   fetch('https://folksa.ga/api/playlists?key=flat_eric', postOptions)
     .then((response) => response.json())
-    .then((postedPlaylist) => {})
+    .then((postedPlaylist) => {
+      succesMessage("Playlist was added");
+    })
     .catch((error) => {
-      console.log('Request failed: ', error);
+      errorMessage(`Request failed: Could not ad playlist`);
     });
 }
 
@@ -451,7 +470,10 @@ function addCommentPlaylist(commentParameters) {
     })
     .then((response) => response.json())
     .then((playlist) => {
-      console.log(playlist);
+      succesMessage("Comment was added");
+    })
+    .catch((error) => {
+      errorMessage(`Request failed: Could not ad comment`);
     });
 }
 
@@ -483,7 +505,10 @@ function voting(voteParameters) {
     })
     .then((response) => response.json())
     .then((playlist) => {
-      console.log(playlist);
+      succesMessage("Vote has been added");
+    })
+    .catch((error) => {
+      errorMessage(`Request failed: Could not ad vote`);
     });
 }
 
@@ -500,16 +525,44 @@ function deleteButtons() {
 
   for (let button of deleteButtons) {
     button.addEventListener("click", function () {
-      var itemToDelete = this.id;
+      alert("hhrrr");
       fetch(`https://folksa.ga/api/${this.name}/${this.id}?key=flat_eric`, deleteOptions)
         .then((response) => response.json())
         .then((deletedItem) => {
           succesMessage("Item was deleted");
+        })
+        .catch((error) => {
+          errorMessage(`Request failed: Could not delete objekt`);
         });
       var listItemToDelete = this.parentElement;
       listItemToDelete.parentNode.removeChild(listItemToDelete);
     })
   }
+}
+
+function deleteCommentButtons(input) {
+  console.log(input);
+  var deleteButton = document.getElementById(`delete${input}`);
+  var deleteOptions = {
+    method: 'DELETE',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  };
+
+  deleteButton.addEventListener("click", function () {
+    fetch(`https://folksa.ga/api/${this.name}/${this.dataset.id}?key=flat_eric`, deleteOptions)
+      .then((response) => response.json())
+      .then((deletedItem) => {
+        succesMessage("Item was deleted");
+      })
+      .catch((error) => {
+        errorMessage(`Request failed: Could not delete objekt`);
+      });
+    var listItemToDelete = this.parentElement;
+    listItemToDelete.parentNode.removeChild(listItemToDelete);
+  })
 }
 
 function errorMessage(errortext) {
