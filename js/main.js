@@ -12,7 +12,7 @@ function searchParameters() {
   const searchButton = document.getElementById("searchButton");
 
   searchButton.addEventListener("click", function () {
-
+    console.log(searchOption.value)
     if (searchCategory.value == "artists" && searchOption.value == "title") {
       var URL = `https://folksa.ga/api/${searchCategory.value}?name=${searchInput.value}&key=flat_eric`;
     } else if (searchCategory.value == "albums") {
