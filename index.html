@@ -11,51 +11,70 @@
 <body>
 	<header>
 		<nav>
-			<h2>Search</h2>
-
-			<input type="search" id="searchInput">
-			<select id="searchCategory">
-				<option value="tracks">Track</option>
-				<option value="artists">Artist</option>
-				<option value="albums">Album</option>
-				<option value="playlists">Playlist</option>
-			</select>
-			<select id="searchOption">
-				<option value="title">Name</option>
-				<option value="genre">genre</option>
-			</select>
-
-			<button id="searchButton">Submit this shit</button>
+			<div class="menu">
+				<div class="logo"><img src="Mockup/Logo.png" alt="Logo" height="60px" widht="60px"></div>
+				<ul>
+					<li><input type="search" id="searchInput" placeholder="Search..." alt="Insert search"></li>
+					<li><div class="styled-select black rounded">
+								<select id="searchCategory">
+									<option value="tracks">Track</option>
+									<option value="artists">Artist</option>
+									<option value="albums">Album</option>
+									<option value="playlists">Play list</option>
+								</select>
+						</div>
+					</li>	
+					<li><select id="searchOption">
+							<option value="title">Name</option>
+							<option value="genre">genre</option>
+						</select></li>
+					<li><button id="searchButton">Submit</button></li>
+				</ul>	
+			</div>
 		</nav>
 	</header>
 	<div class="flashMessage">
 		<div id="errormessage"></div>
 		<div id="succesmessage"></div>
 	</div>
+	
+	
 	<main>
-		<ul id="resultList">
+	  <div class= "resultlist"> 
+			
+			<ul id="resultList">
+			</ul>
+	  </div>
 
-
-
-
-		</ul>
-		<section class="toplistsWrapper">
-			<div class="topList">
-				<h2>Hottest Tracks</h2>
-				<ul id="topTracks">
-				</ul>
-			</div>
-			<div class="topList">
-				<h2>Hottest Albums</h2>
-				<ul id="topAlbums">
-				</ul>
-			</div>
-			<div class="topList">
-				<h2>Hottest Playlists</h2>
-				<ul id="topPlaylists">
-				</ul>
-			</div>
-		</section>
+	  <div class="calltoaction">
+			<h1>Search your favourite music, create playlist and rate them</h1>
+	  </div>
+	 <div class="topliststyle">
+			<section class="toplistsWrapper">
+					<div class="square">
+						<div class="topList">
+								<h2>Top Tracks</h2>
+								<ul id="topTracks">
+								</ul>
+						</div>
+					</div>
+					<div class="square">
+						<div class="topList">
+								<h2>Top Albums</h2>
+								<ul id="topAlbums">
+								</ul>
+						</div>
+					</div>
+					<div class="square">
+						<div class="topList">
+							<h2>Top Playlists</h2>
+							<ul id="topPlaylists">
+							</ul>
+						</div>
+					</div>
+			</section>
+	</div>
+	
 		<section class="addNew">
 				<h2>Add new music</h2>
 				<label for="addCategory">What do you want to add?</label>
