@@ -1,6 +1,6 @@
-# Musicintitutet
+# Music Institute
 
-This is a application to search and add musik with ajax!!
+This is an application to search and add musik with ajax!!
 
 ## GIV - Omi Gibba, Filip Ingemarsson och Ariadna Villar
 
