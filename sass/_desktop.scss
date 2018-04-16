@@ -8,9 +8,30 @@ header {
     margin: 0px;
     padding: 0px;
     margin-bottom: 10px;
-    text-align: center;
 }
 
+.searchContainer {
+    // border-bottom: 1px solid #000;
+    padding: 10px;
+   
+
+}
+.logo img {
+    float: left;
+    margin-left: 10%;
+    height:60px;
+    width:60px;
+    margin-top: 0;
+}
+.searchWrap{
+    margin-left:20%;
+    margin-top:2%;
+    margin-bottom:0px;
+    display:flex;
+
+   
+    
+}
 input[type=search] {
     background-color: #FFCC00;
     color: black;
@@ -20,26 +41,7 @@ input[type=search] {
     margin: 0px 20px 0px 0px;
 }
 
-nav {
-    // border-bottom: 1px solid #000;
-    padding: 10px;
-}
-
-.logo img {
-    float: left;
-    margin-left: 10%;
-    height:60px;
-    width:60px;
-}
-
-.menu ul {
-    position: absolute;
-    display:flex;
-    margin-top: 1,5%;
-    margin-left: 20%;
-}
-
-.menu ul li button {
+.buttonSubmitbutton {
     margin: 4px 20px;
     padding: 3px 20px;
     text-align: center;
@@ -50,6 +52,7 @@ nav {
     color: black;
     border: 1px solid #000;
 }
+
 //CHECK
 /* Buttons of the navigation */
 
