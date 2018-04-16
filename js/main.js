@@ -1,53 +1,235 @@
-({
-  "plugins": ["jsdom-quokka-plugin"]
-})
-//Parameters for search menu
+class Controller {
+  searchParameters() {
+    //Parameters for search menu
+    var searchInput = document.getElementById('searchInput');
+    var searchOption = document.getElementById('searchOption');
+    var searchCategory = document.getElementById('searchCategory');
+    const searchButton = document.getElementById("searchButton");
 
-searchParameters()
-
-function searchParameters() {
-  var searchInput = document.getElementById('searchInput');
-  var searchOption = document.getElementById('searchOption');
-  var searchCategory = document.getElementById('searchCategory');
-  const searchButton = document.getElementById("searchButton");
-
-  searchButton.addEventListener("click", function () {
-    console.log(searchOption.value)
-    if (searchCategory.value == "artists" && searchOption.value == "title") {
-      var URL = `https://folksa.ga/api/${searchCategory.value}?name=${searchInput.value}&key=flat_eric`;
-    } else if (searchCategory.value == "albums") {
-      var URL = `https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${searchInput.value}&populateArtists=true&key=flat_eric`;
-    } else {
-      var URL = `https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${searchInput.value}&key=flat_eric`;
-    }
-    searchResult(URL);
-  });
-
-}
-//fetch all search results based on parameters
-function searchResult(URL) {
-  fetch(URL)
-    .then((response) => response.json())
-    .then((searchResult) => {
-      if (searchCategory.value == "tracks") {
-        displayTrackSearch(searchResult);
-        succesMessage("You searched for track");
-      } else if (searchCategory.value == "artists") {
-        displayArtistSearch(searchResult);
-        succesMessage("You searched for artist");
+    searchButton.addEventListener("click", function () {
+      if (searchCategory.value == "artists" && searchOption.value == "title") {
+        var URL = `https://folksa.ga/api/${searchCategory.value}?name=${searchInput.value}&key=flat_eric`;
       } else if (searchCategory.value == "albums") {
-        displayAlbumSearch(searchResult)
-        succesMessage("You searched for album");
-      } else if (searchCategory.value == "playlists") {
-        displayPlaylistSearch(searchResult)
-        succesMessage("You searched for playlist");
+        var URL = `https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${searchInput.value}&populateArtists=true&key=flat_eric`;
+      } else {
+        var URL = `https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${searchInput.value}&key=flat_eric`;
       }
-    })
-    .catch((error) => {
-      console.log(error)
-      errorMessage(`Request failed: Could not fetch search`);
-    });;
+      const searchFetch = new Fetch();
+      searchFetch.searchResult(URL);
+    });
+  }
+
+  //Show more button for every result item. It shows the content of a hidden div.
+  showMoreButtons() {
+    var showButtons = document.getElementsByClassName("show");
+    for (let button of showButtons) {
+      button.addEventListener("click", function () {
+        var hiddenDiv = this.previousElementSibling;
+        hiddenDiv.classList.toggle("hidden");
+
+        if (this.innerHTML == "Show more") {
+          this.innerHTML = "Hide"
+        } else if (this.innerHTML == "Hide") {
+          this.innerHTML = "Show more";
+        }
+      })
+    }
+  }
+
+  eventlistenerButtons() {
+    const showButtonController = new Controller();
+    showButtonController.showMoreButtons();
+    deleteButtons();
+    eventlistenerVote();
+  }
+
 }
+
+
+class Fetch {
+  //fetch all search results based on parameters
+  searchResult(URL) {
+    fetch(URL)
+      .then((response) => response.json())
+      .then((searchResult) => {
+        const displaySearchDOM = new DOM;
+        if (searchCategory.value == "tracks") {
+          displaySearchDOM.displayTrackSearch(searchResult);
+          succesMessage("You searched for track");
+
+        } else if (searchCategory.value == "artists") {
+          displaySearchDOM.displayArtistSearch(searchResult);
+          succesMessage("You searched for artist");
+
+        } else if (searchCategory.value == "albums") {
+          displaySearchDOM.displayAlbumSearch(searchResult)
+          succesMessage("You searched for album");
+
+        } else if (searchCategory.value == "playlists") {
+          displaySearchDOM.displayPlaylistSearch(searchResult)
+          succesMessage("You searched for playlist");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        errorMessage(`Request failed: Could not fetch search`);
+      });;
+  }
+}
+
+
+class DOM {
+  displayArtistSearch(searchResult) {
+    var resultList = document.getElementById('resultList');
+    resultList.innerHTML = '';
+    for (let i = 0; i < searchResult.length; i++) {
+
+      var resultItem = document.createElement('li');
+      resultItem.innerHTML =
+        `<p>Name: ${searchResult[i].name}</p>
+               <p>Genre: ${genres(searchResult[i].genres)}</p>
+               <button class="delete" name="artists" id=${searchResult[i]._id}>Delete</button>
+               `;
+
+      resultList.appendChild(resultItem);
+    }
+    deleteButtons();
+  }
+
+  displayTrackSearch(searchResult) {
+    var resultList = document.getElementById('resultList');
+    resultList.innerHTML = '';
+    for (let i = 0; i < searchResult.length; i++) {
+      var resultItem = document.createElement('li');
+      resultItem.innerHTML =
+        `<h3>Title: ${searchResult[i].title}</h3>
+        <p>Artist: ${artists(searchResult[i].artists)}</p>
+        <p>Genre: ${genres(searchResult[i].genres)}</p>
+        <div class="hidden">
+          <p>Album: ${searchResult[i].album.title}</p>
+          <p>${searchResult[i].ratings}</p>
+          <div class="rate">
+              <h4>Rate Track</h4>
+              <select id="vote">
+                ${loopOption1To10()}
+              </select>
+              <button class="vote" name="tracks" id=${searchResult[i]._id}>vote</button>
+            </div>
+          <h4>Add to playlist</h4>
+          <label for="addToPlaylist">Playlist name</label>
+          <input type="text" id="addToPlaylist">
+          <button id="addToPlaylistButton">Submit</button>
+              </div>
+        <button class="show">Show more</button>
+  
+        <button class="delete" name="tracks" id=${searchResult[i]._id}>Delete track</button>`;
+      resultItem.id =
+        resultList.appendChild(resultItem);
+    }
+    const eventlistenersButton = new Controller;
+    eventlistenersButton.eventlistenerButtons();
+
+  }
+
+  displayPlaylistSearch(searchResult) {
+    var resultList = document.getElementById('resultList');
+    resultList.innerHTML = '';
+    for (let i = 0; i < searchResult.length; i++) {
+      var resultItem = document.createElement('li');
+      resultItem.innerHTML =
+        ` <p>Playlist: ${searchResult[i].title}</p>
+          <p>Genre: ${searchResult[i].genres}</p>
+          <div class="hidden">
+            <div class="list-tracks">
+              ${loopTracksPlaylist(searchResult[i].tracks)}
+            </div>
+            <div class="rate">
+              <h4>Rate Playlist</h4>
+              <select id="vote">
+                ${loopOption1To10()}
+              </select>
+              <button class="vote" name="playlists" id=${searchResult[i]._id}>vote</button>
+            </div>
+            <div class="comment-section">
+              <div class="list-of-comments" id="comment${searchResult[i]._id}"></div>
+              <h4>Comment Playlist</h4>
+              <label for="commentUserName"> Name: </label>
+              <input type="text" id="commentUserName">
+              <label for="commentContent">Content:</label>
+              <input type="text" id="commentContent">
+              <button class="comment" id=${searchResult[i]._id}>Comment</button>
+            </div>
+          </div>
+          <button class="show">Show more</button>
+          <button class="delete" name="playlists" id=${searchResult[i]._id}>Delete</button>
+  
+              `;
+      resultList.appendChild(resultItem);
+      const fetchComments = new Fetch();
+      fetchComments.getCommentsPlaylist(searchResult[i]._id)
+    }
+    const eventlistenersButton = new Controller();
+    eventlistenersButton.eventlistenerButtons();
+    eventlistenerAddcommentPlaylist();
+
+  }
+
+  displayAlbumSearch(searchResult) {
+    var resultList = document.getElementById('resultList');
+    resultList.innerHTML = '';
+    for (let i = 0; i < searchResult.length; i++) {
+
+      var resultItem = document.createElement('li');
+      resultItem.innerHTML =
+        `<p>Album title: ${searchResult[i].title}</p>
+        <p>Artist: ${artists(searchResult[i].artists)}</p>
+        
+        <div class="hidden">
+          <div class="rate">
+            <h4>Rate Album</h4>
+            <select id="vote">
+              ${loopOption1To10()}
+            </select>
+            <button class="vote" name="albums" id=${searchResult[i]._id}>vote</button>
+          </div>
+        </div>
+        <button class="show">Show more</button>
+        <button class="delete" name="albums" id=${searchResult[i]._id}>Delete track</button>`;
+      resultList.appendChild(resultItem);
+    }
+    const eventlistenersButton = new Controller;
+    eventlistenersButton.eventlistenerButtons();
+  }
+
+
+  getCommentsPlaylist(playlistId) {
+    var array = [];
+    fetch(`https://folksa.ga/api/playlists/${playlistId}/comments?key=flat_eric`)
+      .then((response) => response.json())
+      .then((comments) => {
+        listCommments(comments, playlistId)
+      })
+      .catch((error) => {
+        errorMessage(`Request failed: Could not fetch comments`);
+      });
+  }
+
+}
+
+
+class Utility {
+
+}
+
+const searchController = new Controller;
+searchController.searchParameters();
+
+
+
+
+
+
+
 
 function genres(input) {
   var genre = '';
@@ -58,7 +240,6 @@ function genres(input) {
     genre += `${input[i]}`;
   }
   return genre;
-
 }
 
 function artists(input) {
@@ -79,7 +260,7 @@ function loopOption1To10() {
   return option
 }
 
-function loopTrcksPlaylist(input) {
+function loopTracksPlaylist(input) {
   var tracks = '';
   for (let i = 0; i < input.length; i++) {
     tracks += `<p>Track${[i + 1]}: ${input[i].title}</p>`;
@@ -87,17 +268,7 @@ function loopTrcksPlaylist(input) {
   return tracks;
 }
 
-function getCommentsPlaylist(playlistId) {
-  var array = [];
-  fetch(`https://folksa.ga/api/playlists/${playlistId}/comments?key=flat_eric`)
-    .then((response) => response.json())
-    .then((comments) => {
-      listCommments(comments, playlistId)
-    })
-    .catch((error) => {
-      errorMessage(`Request failed: Could not fetch comments`);
-    });
-}
+
 
 function listCommments(input, playlistId) {
   var listOfComments = document.getElementById(`comment${playlistId}`);
@@ -120,150 +291,13 @@ function listCommments(input, playlistId) {
 
 }
 
-function displayArtistSearch(searchResult) {
-  var resultList = document.getElementById('resultList');
-  resultList.innerHTML = '';
-  for (let i = 0; i < searchResult.length; i++) {
 
-    var resultItem = document.createElement('li');
-    resultItem.innerHTML =
-      `<p>Name: ${searchResult[i].name}</p>
-             <p>Genre: ${genres(searchResult[i].genres)}</p>
-             <button class="delete" name="artists" id=${searchResult[i]._id}>Delete</button>
-             `;
 
-    resultList.appendChild(resultItem);
-  }
-  deleteButtons();
-}
 
-function displayTrackSearch(searchResult) {
-  var resultList = document.getElementById('resultList');
-  resultList.innerHTML = '';
-  for (let i = 0; i < searchResult.length; i++) {
-    var resultItem = document.createElement('li');
-    resultItem.innerHTML =
-      `<h3>Title: ${searchResult[i].title}</h3>
-			<p>Artist: ${artists(searchResult[i].artists)}</p>
-			<p>Genre: ${genres(searchResult[i].genres)}</p>
-      <div class="hidden">
-        <p>Album: ${searchResult[i].album.title}</p>
-				<p>${searchResult[i].ratings}</p>
-				<div class="rate">
-            <h4>Rate Track</h4>
-            <select id="vote">
-              ${loopOption1To10()}
-            </select>
-            <button class="vote" name="tracks" id=${searchResult[i]._id}>vote</button>
-          </div>
-				<h4>Add to playlist</h4>
-				<label for="addToPlaylist">Playlist name</label>
-				<input type="text" id="addToPlaylist">
-				<button id="addToPlaylistButton">Submit</button>
-            </div>
-			<button class="show">Show more</button>
 
-			<button class="delete" name="tracks" id=${searchResult[i]._id}>Delete track</button>`;
-    resultItem.id =
-      resultList.appendChild(resultItem);
-  }
-  showMoreButtons();
-  deleteButtons();
-  eventlistnerVote()
 
-}
 
-function displayPlaylistSearch(searchResult) {
-  var resultList = document.getElementById('resultList');
-  resultList.innerHTML = '';
-  for (let i = 0; i < searchResult.length; i++) {
-    console.log(searchResult[i]);
-    var resultItem = document.createElement('li');
-    resultItem.innerHTML =
-      ` <p>Playlist: ${searchResult[i].title}</p>
-        <p>Genre: ${searchResult[i].genres}</p>
-        <div class="hidden">
-          <div class="list-tracks">
-            ${loopTrcksPlaylist(searchResult[i].tracks)}
-          </div>
-          <div class="rate">
-            <h4>Rate Playlist</h4>
-            <select id="vote">
-              ${loopOption1To10()}
-            </select>
-            <button class="vote" name="playlists" id=${searchResult[i]._id}>vote</button>
-          </div>
-          <div class="comment-section">
-            <div class="list-of-comments" id="comment${searchResult[i]._id}"></div>
-            <h4>Comment Playlist</h4>
-            <label for="commentUserName"> Name: </label>
-            <input type="text" id="commentUserName">
-            <label for="commentContent">Content:</label>
-            <input type="text" id="commentContent">
-            <button class="comment" id=${searchResult[i]._id}>Comment</button>
-          </div>
-        </div>
-        <button class="show">Show more</button>
-        <button class="delete" name="playlists" id=${searchResult[i]._id}>Delete</button>
 
-            `;
-    resultList.appendChild(resultItem);
-    getCommentsPlaylist(searchResult[i]._id)
-  }
-  deleteButtons();
-  showMoreButtons();
-  eventlistnerAddcommentPlaylist();
-  eventlistnerVote();
-
-}
-
-function displayAlbumSearch(searchResult) {
-  var resultList = document.getElementById('resultList');
-  resultList.innerHTML = '';
-  for (let i = 0; i < searchResult.length; i++) {
-
-    var resultItem = document.createElement('li');
-    resultItem.innerHTML =
-      `<p>Album title: ${searchResult[i].title}</p>
-      <p>Artist: ${artists(searchResult[i].artists)}</p>
-      
-      <div class="hidden">
-        <div class="rate">
-          <h4>Rate Album</h4>
-          <select id="vote">
-            ${loopOption1To10()}
-          </select>
-          <button class="vote" name="albums" id=${searchResult[i]._id}>vote</button>
-        </div>
-      </div>
-      <button class="show">Show more</button>
-      <button class="delete" name="albums" id=${searchResult[i]._id}>Delete track</button>`;
-    resultList.appendChild(resultItem);
-  }
-  showMoreButtons();
-  deleteButtons();
-  eventlistnerVote()
-}
-
-//Show more button for every result item. It shows the content of a hidden div.
-
-function showMoreButtons() {
-  var showButtons = document.getElementsByClassName("show");
-  for (button of showButtons) {
-    button.addEventListener("click", function () {
-      var hiddenDiv = this.previousElementSibling;
-      hiddenDiv.classList.toggle("hidden");
-
-      if (this.innerHTML == "Show more") {
-        this.innerHTML = "Hide"
-      } else if (this.innerHTML == "Hide") {
-        this.innerHTML = "Show more";
-      }
-    })
-  }
-}
-
-//Code for adding new content below
 
 document.getElementById('addCategory').addEventListener('change', function () {
   formInputFields();
@@ -443,7 +477,7 @@ function addPlaylist() {
     });
 }
 
-function eventlistnerAddcommentPlaylist() {
+function eventlistenerAddcommentPlaylist() {
   var commentButtons = document.getElementsByClassName("comment");
   for (let commentButton of commentButtons) {
     commentButton.addEventListener("click", function () {
@@ -478,7 +512,7 @@ function addCommentPlaylist(commentParameters) {
 }
 
 
-function eventlistnerVote() {
+function eventlistenerVote() {
   var votes = document.getElementsByClassName("vote");
   for (let vote of votes) {
     vote.addEventListener("click", function () {
@@ -508,7 +542,7 @@ function voting(voteParameters) {
       succesMessage("Vote has been added");
     })
     .catch((error) => {
-      errorMessage(`Request failed: Could not ad vote`);
+      errorMessage(`Request failed: Could not add vote`);
     });
 }
 
