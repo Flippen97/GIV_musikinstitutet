@@ -105,6 +105,9 @@ class Controller {
 
 
 class Fetch {
+  constructor() {
+    this.utility = new Utility();
+  }
   //fetch all search results based on parameters
   searchResult(URL) {
     fetch(URL)
@@ -113,24 +116,24 @@ class Fetch {
         const displaySearchDOM = new DOM;
         if (searchCategory.value == "tracks") {
           displaySearchDOM.displayTrackSearch(searchResult);
-          succesMessage("You searched for track");
+          this.utility.succesMessage("You searched for track");
 
         } else if (searchCategory.value == "artists") {
           displaySearchDOM.displayArtistSearch(searchResult);
-          succesMessage("You searched for artist");
+          this.utility.succesMessage("You searched for artist");
 
         } else if (searchCategory.value == "albums") {
           displaySearchDOM.displayAlbumSearch(searchResult)
-          succesMessage("You searched for album");
+          this.utility.succesMessage("You searched for album");
 
         } else if (searchCategory.value == "playlists") {
           displaySearchDOM.displayPlaylistSearch(searchResult)
-          succesMessage("You searched for playlist");
+          this.utility.succesMessage("You searched for playlist");
         }
       })
       .catch((error) => {
         console.log(error);
-        errorMessage(`Request failed: Could not fetch search`);
+        this.utility.errorMessage(`Request failed: Could not fetch search`);
       });;
   }
 
@@ -144,7 +147,7 @@ class Fetch {
       })
       .catch((error) => {
         console.log(error)
-        errorMessage(`Request failed: Could not fetch comments`);
+        this.utility.errorMessage(`Request failed: Could not fetch comments`);
       });
   }
 
@@ -167,11 +170,11 @@ class Fetch {
       .then((response) => response.json())
       .then((postedArtist) => {
         var newArtist = postedArtist;
-        succesMessage("Artist was added");
+        this.utility.succesMessage("Artist was added");
         return newArtist;
       })
       .catch((error) => {
-        errorMessage(`Request failed: Could not ad artist`);
+        this.utility.errorMessage(`Request failed: Could not ad artist`);
       });
   }
 
@@ -196,11 +199,11 @@ class Fetch {
       .then((postedAlbum) => {
         var newAlbum = postedAlbum;
         console.log(newAlbum);
-        succesMessage("Album was added");
+        this.utility.succesMessage("Album was added");
         return newAlbum;
       })
       .catch((error) => {
-        eerrorMessage(`Request failed: Could not ad album`);
+        this.utility.errorMessage(`Request failed: Could not ad album`);
       });
   }
 
@@ -225,10 +228,10 @@ class Fetch {
     fetch('https://folksa.ga/api/tracks?key=flat_eric', postOptions)
       .then((response) => response.json())
       .then((postedTrack) => {
-        succesMessage("Track was added");
+        this.utility.succesMessage("Track was added");
       })
       .catch((error) => {
-        errorMessage(`Request failed: Could not ad track`);
+        this.utility.errorMessage(`Request failed: Could not ad track`);
       });
   }
 
@@ -249,10 +252,10 @@ class Fetch {
     fetch('https://folksa.ga/api/playlists?key=flat_eric', postOptions)
       .then((response) => response.json())
       .then((postedPlaylist) => {
-        succesMessage("Playlist was added");
+        this.utility.succesMessage("Playlist was added");
       })
       .catch((error) => {
-        errorMessage(`Request failed: Could not ad playlist`);
+        this.utility.errorMessage(`Request failed: Could not ad playlist`);
       });
   }
 
@@ -274,10 +277,10 @@ class Fetch {
       })
       .then((response) => response.json())
       .then((playlist) => {
-        succesMessage("Comment was added");
+        this.utility.succesMessage("Comment was added");
       })
       .catch((error) => {
-        errorMessage(`Request failed: Could not ad comment`);
+        this.utility.errorMessage(`Request failed: Could not ad comment`);
       });
   }
 
@@ -298,10 +301,10 @@ class Fetch {
       })
       .then((response) => response.json())
       .then((playlist) => {
-        succesMessage("Vote has been added");
+        this.utility.succesMessage("Vote has been added");
       })
       .catch((error) => {
-        errorMessage(`Request failed: Could not add vote`);
+        this.utility.errorMessage(`Request failed: Could not add vote`);
       });
   }
 
@@ -340,11 +343,11 @@ class Fetch {
     fetch(`https://folksa.ga/api/${button.name}/${deleteId}?key=flat_eric`, deleteOptions)
       .then((response) => response.json())
       .then((deletedItem) => {
-        succesMessage("Item was deleted");
+        this.utility.succesMessage("Item was deleted");
       })
       .catch((error) => {
         console.log(error)
-        errorMessage(`Request failed: Could not delete object`);
+        this.utility.errorMessage(`Request failed: Could not delete object`);
       });
     var listItemToDelete = button.parentElement;
     listItemToDelete.parentNode.removeChild(listItemToDelete);
