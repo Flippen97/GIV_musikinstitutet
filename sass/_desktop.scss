@@ -28,11 +28,14 @@ nav {
 .logo img {
     float: left;
     margin-left: 10%;
+    height:60px;
+    width:60px;
 }
 
 .menu ul {
     position: absolute;
-    margin-top: 1, 05%;
+    display:flex;
+    margin-top: 1,5%;
     margin-left: 20%;
 }
 
@@ -49,13 +52,12 @@ nav {
 }
 //CHECK
 /* Buttons of the navigation */
-div { margin: 20px; }
 
 .menu .styled-select {
 
    height: 29px;
    overflow: hidden;
-   width: 240px;
+   margin-right: 15px;
 }
 
 .menu .styled-select select {
@@ -64,17 +66,18 @@ div { margin: 20px; }
    font-size: 14px;
    height: 29px;
    padding: 5px; /* If you add too much padding here, the options won't show in IE */
-   width: 268px;
+   width: 100px;
 }
 
 .menu .styled-select.slate select {
    border: 1px solid #ccc;
    font-size: 16px;
    height: 34px;
-   width: 268px;
+   width: 100px;
+   
 }
 
-/* -------------------- Rounded Corners */
+/* Rounded corners */
 .rounded {
    -webkit-border-radius: 20px;
    -moz-border-radius: 20px;
@@ -87,19 +90,11 @@ div { margin: 20px; }
    border-radius: 5px;
 }
 
-/* -------------------- Colors: Background */
-.slate   { background-color: #ddd; }
-.green   { background-color: #779126; }
-.blue    { background-color: #3b8ec2; }
-.yellow  { background-color: #eec111; }
+/* Colors: Background */
 .black   { background-color: #000; }
 
-/* -------------------- Colors: Text */
-.slate select   { color: #000; }
-.green select   { color: #fff; }
-.blue select    { color: #fff; }
-.yellow select  { color: #000; }
-.black select   { color: #fff; }
+/* Colors: Text */
+.black select   { color: #FFCC00; }
 
 
 /* -------------------- Select Box Styles: danielneumann.com Method */
@@ -111,8 +106,7 @@ div { margin: 20px; }
    font-size: 20px;
    font-weight: bold;
    padding: 2px 10px;
-   width: 378px;
-   *width: 350px;
+   width: 100px;
    *background: #58B14C;
    -webkit-appearance: none;
 }
@@ -125,7 +119,7 @@ div { margin: 20px; }
    border-radius: 9px 9px 9px 9px;
    box-shadow: 1px 1px 11px #330033;
 }
-//CHECK
+
 
 /* Styling of the Result Search list */
 
@@ -159,15 +153,24 @@ div { margin: 20px; }
 
 /* Styling Top 3 Lists */
 
-main .topliststyle {
-    background-color: grey;
+main .toplistsWrapper {
+    background-color:#9A9A9A;
     padding: 50px;
 }
 
 main .square {
     background-color: #FFCC00;
-    border: 10px black
+    margin:10px;
 }
 main .topList {
+    margin:10px;
+    padding:20px;
     background-color:white;
+    border-style:1px black;
+}
+
+.topList ul {
+    list-style: none;
+    padding: 0;
+
 }

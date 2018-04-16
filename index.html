@@ -13,7 +13,7 @@
 		<nav>
 			<div class="menu">
 				<div class="logo">
-					<img src="Mockup/Logo.png" alt="Logo" height="60px" widht="60px">
+					<img src="Mockup/Logo.png" alt="Logo">
 				</div>
 				<ul>
 					<li>
@@ -31,18 +31,19 @@
 						</div>
 					</li>
 					<li>
-					    <div class="styled-select black rounded">
+					<div class="styled-select black rounded">
 						<select id="searchOption">
 							<option value="title">Name</option>
-							<option value="genres">genre</option>
+							<option value="genres">Genre</option>
 						</select>
-						</div>
+					</div>
+						
 					</li>
 					<li>
 						<button id="searchButton">Submit</button>
 					</li>
 					<li>
-						<button id="addnewButton">Add new</button>
+						<a href="#addNew"><button id="addnewButton">Add new</button></a>
 					</li>
 				</ul>
 			</div>
@@ -90,16 +91,18 @@
 			</section>
 		</div>
 
-		<section class="addNew">
+		<section id="addNew">
 			<h2>Add new music</h2>
 			<label for="addCategory">What do you want to add?</label>
+			<div class="styled-select black rounded">
 			<select id="addCategory">
-				<option selected="selected">Choose category</option>
+				<option selected="selected">Create New</option>
 				<option id="tracks">Track</option>
 				<option id="artists">Artist</option>
 				<option id="albums">Album</option>
 				<option id="playlists">Playlist</option>
 			</select>
+			</div>
 			<br/>
 			<div id="title" class="hidden">
 				<label for="title">Title</label>
