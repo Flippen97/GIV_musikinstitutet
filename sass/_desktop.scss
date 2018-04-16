@@ -28,11 +28,14 @@ nav {
 .logo img {
     float: left;
     margin-left: 10%;
+    height:60px;
+    width:60px;
 }
 
 .menu ul {
     position: absolute;
-    margin-top: 1, 05%;
+    display:flex;
+    margin-top: 1,5%;
     margin-left: 20%;
 }
 
@@ -47,6 +50,76 @@ nav {
     color: black;
     border: 1px solid #000;
 }
+//CHECK
+/* Buttons of the navigation */
+
+.menu .styled-select {
+
+   height: 29px;
+   overflow: hidden;
+   margin-right: 15px;
+}
+
+.menu .styled-select select {
+   background: transparent;
+   border: none;
+   font-size: 14px;
+   height: 29px;
+   padding: 5px; /* If you add too much padding here, the options won't show in IE */
+   width: 100px;
+}
+
+.menu .styled-select.slate select {
+   border: 1px solid #ccc;
+   font-size: 16px;
+   height: 34px;
+   width: 100px;
+   
+}
+
+/* Rounded corners */
+.rounded {
+   -webkit-border-radius: 20px;
+   -moz-border-radius: 20px;
+   border-radius: 20px;
+}
+
+.semi-square {
+   -webkit-border-radius: 5px;
+   -moz-border-radius: 5px;
+   border-radius: 5px;
+}
+
+/* Colors: Background */
+.black   { background-color: #000; }
+
+/* Colors: Text */
+.black select   { color: #FFCC00; }
+
+
+/* -------------------- Select Box Styles: danielneumann.com Method */
+/* -------------------- Source: http://danielneumann.com/blog/how-to-style-dropdown-with-css-only/ */
+#mainselection select {
+   border: 0;
+   color: #EEE;
+   background: transparent;
+   font-size: 20px;
+   font-weight: bold;
+   padding: 2px 10px;
+   width: 100px;
+   *background: #58B14C;
+   -webkit-appearance: none;
+}
+
+#mainselection {
+   overflow:hidden;
+   width:350px;
+   -moz-border-radius: 9px 9px 9px 9px;
+   -webkit-border-radius: 9px 9px 9px 9px;
+   border-radius: 9px 9px 9px 9px;
+   box-shadow: 1px 1px 11px #330033;
+}
+
 
 /* Styling of the Result Search list */
 
@@ -59,6 +132,9 @@ nav {
     background-blend-mode: darken;
     overflow: scroll;
     height: 100vh;
+    color:white;
+    background-color: rgba(0, 0, 0, 0.6);
+    background-blend-mode: darken;
 }
 
 /* Call to action banner */
@@ -77,11 +153,24 @@ nav {
 
 /* Styling Top 3 Lists */
 
-main .topliststyle {
-    background-color: grey;
+main .toplistsWrapper {
+    background-color:#9A9A9A;
     padding: 50px;
 }
 
 main .square {
     background-color: #FFCC00;
+    margin:10px;
+}
+main .topList {
+    margin:10px;
+    padding:20px;
+    background-color:white;
+    border-style:1px black;
+}
+
+.topList ul {
+    list-style: none;
+    padding: 0;
+
 }
