@@ -38,25 +38,26 @@ class Controller {
 
   eventlistenerButtons() {
     this.showMoreButtons();
-    deleteButtons();
+    this.deleteButtons();
     this.eventlistenerVote();
   }
 
   addButtonEventlistener() {
     const addContnent = new Fetch();
+    const clearInput = new Utility();
     document.getElementById('addButton').addEventListener('click', function () {
       switch (addCategory.value) {
         case 'Artist':
-          addContnent.addArtist().then(clearInputFields);
+          addContnent.addArtist().then(clearInput.clearInputFields);
           break;
         case 'Album':
-          addContnent.addArtist().then(addContnent.addAlbum).then(clearInputFields);
+          addContnent.addArtist().then(addContnent.addAlbum).then(clearInput.clearInputFields);
           break;
         case 'Track':
-          addContnent.addArtist().then(addContnent.addAlbum).then(addContnent.addTrack).then(clearInputFields);
+          addContnent.addArtist().then(addContnent.addAlbum).then(addContnent.addTrack).then(clearInput.clearInputFields);
           break;
         case 'Playlist':
-          addContnent.addPlaylist().then(clearInputFields);
+          addContnent.addPlaylist().then(clearInput.clearInputFields);
           break;
       }
     });
@@ -80,6 +81,24 @@ class Controller {
         addVote.voting(this);
       })
     }
+  }
+  deleteButtons() {
+    var deleteButtons = document.getElementsByClassName("delete");
+    for (let button of deleteButtons) {
+      button.addEventListener("click", function () {
+        const deleteFetch = new Fetch();
+        deleteFetch.deleteItem(this, this.id)
+      })
+    }
+  }
+
+  deleteCommentButtons(input) {
+    console.log(input);
+    var deleteButton = document.getElementById(`delete${input}`);
+    deleteButton.addEventListener("click", function () {
+      const deleteFetch = new Fetch();
+      deleteFetch.deleteItem(this, this.dataset.id)
+    })
   }
 
 }
@@ -124,6 +143,7 @@ class Fetch {
         displayCommentsDOM.listCommments(comments, playlistId)
       })
       .catch((error) => {
+        console.log(error)
         errorMessage(`Request failed: Could not fetch comments`);
       });
   }
@@ -285,10 +305,58 @@ class Fetch {
       });
   }
 
+  fetchTopList(category) {
+    fetch(`https://folksa.ga/api/${category}?limit=999&key=flat_eric`)
+      .then((response) => response.json())
+      .then((categoryTopList) => {
+        var topListarray = [];
+        const theMean = new Utility;
+        for (let i = 0; i < categoryTopList.length; i++) {
+          var rating = categoryTopList[i].ratings;
+          if (rating.length) {
+            var obj = {
+              title: categoryTopList[i].title,
+              rating: theMean.calculateMeanRating(rating),
+            };
+            topListarray.push(obj)
+          }
+        }
+        topListarray.sort(function (a, b) {
+          return b.rating - a.rating;
+        });
+        const listTopFive = new DOM;
+        listTopFive.listTopLists(topListarray, category);
+      });
+  }
+
+  deleteItem(button, deleteId) {
+    var deleteOptions = {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    };
+    fetch(`https://folksa.ga/api/${button.name}/${deleteId}?key=flat_eric`, deleteOptions)
+      .then((response) => response.json())
+      .then((deletedItem) => {
+        succesMessage("Item was deleted");
+      })
+      .catch((error) => {
+        console.log(error)
+        errorMessage(`Request failed: Could not delete object`);
+      });
+    var listItemToDelete = button.parentElement;
+    listItemToDelete.parentNode.removeChild(listItemToDelete);
+  }
+
 }
 
 
 class DOM {
+  constructor() {
+    this.utility = new Utility();
+  }
   displayArtistSearch(searchResult) {
     var resultList = document.getElementById('resultList');
     resultList.innerHTML = '';
@@ -297,13 +365,14 @@ class DOM {
       var resultItem = document.createElement('li');
       resultItem.innerHTML =
         `<p>Name: ${searchResult[i].name}</p>
-               <p>Genre: ${genres(searchResult[i].genres)}</p>
+               <p>Genre: ${this.utility.genres(searchResult[i].genres)}</p>
                <button class="delete" name="artists" id=${searchResult[i]._id}>Delete</button>
                `;
 
       resultList.appendChild(resultItem);
     }
-    deleteButtons();
+    const deleteButton = new Controller();
+    deleteButton.deleteButtons();
   }
 
   displayTrackSearch(searchResult) {
@@ -313,15 +382,15 @@ class DOM {
       var resultItem = document.createElement('li');
       resultItem.innerHTML =
         `<h3>Title: ${searchResult[i].title}</h3>
-        <p>Artist: ${artists(searchResult[i].artists)}</p>
-        <p>Genre: ${genres(searchResult[i].genres)}</p>
+        <p>Artist: ${this.utility.artists(searchResult[i].artists)}</p>
+        <p>Genre: ${this.utility.genres(searchResult[i].genres)}</p>
         <div class="hidden">
           <p>Album: ${searchResult[i].album.title}</p>
-          <p>${searchResult[i].ratings}</p>
+          <p>Rating: ${this.utility.calculateMeanRating(searchResult[i].ratings)}</p>
           <div class="rate">
               <h4>Rate Track</h4>
               <select id="vote">
-                ${loopOption1To10()}
+                ${this.utility.loopOption1To10()}
               </select>
               <button class="vote" name="tracks" id=${searchResult[i]._id}>vote</button>
             </div>
@@ -343,20 +412,22 @@ class DOM {
 
   displayPlaylistSearch(searchResult) {
     var resultList = document.getElementById('resultList');
+
     resultList.innerHTML = '';
     for (let i = 0; i < searchResult.length; i++) {
       var resultItem = document.createElement('li');
       resultItem.innerHTML =
         ` <p>Playlist: ${searchResult[i].title}</p>
-          <p>Genre: ${searchResult[i].genres}</p>
+          <p>Genre: ${this.utility.genres(searchResult[i].genres)}</p>
           <div class="hidden">
             <div class="list-tracks">
-              ${loopTracksPlaylist(searchResult[i].tracks)}
+              ${this.utility.loopTracksPlaylist(searchResult[i].tracks)}
             </div>
             <div class="rate">
+            <p>Rating: ${this.utility.calculateMeanRating(searchResult[i].ratings)}</p>
               <h4>Rate Playlist</h4>
               <select id="vote">
-                ${loopOption1To10()}
+                ${this.utility.loopOption1To10()}
               </select>
               <button class="vote" name="playlists" id=${searchResult[i]._id}>vote</button>
             </div>
@@ -388,23 +459,23 @@ class DOM {
     var resultList = document.getElementById('resultList');
     resultList.innerHTML = '';
     for (let i = 0; i < searchResult.length; i++) {
-
       var resultItem = document.createElement('li');
       resultItem.innerHTML =
         `<p>Album title: ${searchResult[i].title}</p>
-        <p>Artist: ${artists(searchResult[i].artists)}</p>
+        <p>Artist: ${this.utility.artists(searchResult[i].artists)}</p>
         
         <div class="hidden">
           <div class="rate">
+          <p>Rating: ${this.utility.calculateMeanRating(searchResult[i].ratings)}</p>
             <h4>Rate Album</h4>
             <select id="vote">
-              ${loopOption1To10()}
+              ${this.utility.loopOption1To10()}
             </select>
             <button class="vote" name="albums" id=${searchResult[i]._id}>vote</button>
           </div>
         </div>
         <button class="show">Show more</button>
-        <button class="delete" name="albums" id=${searchResult[i]._id}>Delete track</button>`;
+        <button class="delete" name="albums" id=${searchResult[i]._id}>Delete Album</button>`;
       resultList.appendChild(resultItem);
     }
     const eventlistenersButton = new Controller;
@@ -412,26 +483,48 @@ class DOM {
   }
 
 
-  listCommments(input, playlistId) {
+  listCommments(comments, playlistId) {
     var listOfComments = document.getElementById(`comment${playlistId}`);
 
     var comment = '';
-    for (let i = 0; i < input.length; i++) {
+    for (let i = 0; i < comments.length; i++) {
       comment += `
         <div class="comment">
-        <p>Username: ${input[i].username}</p>
-        <p>Content: ${input[i].body}</p>
-        <button class="delete" name="comments" data-id="${input[i]._id}" id="delete${input[i]._id}">Delete comment</button>
+        <p>Username: ${comments[i].username}</p>
+        <p>Content: ${comments[i].body}</p>
+        <button class="delete" name="comments" data-id="${comments[i]._id}" id="delete${comments[i]._id}">Delete comment</button>
         </div>
         `;
     }
     listOfComments.innerHTML = comment;
-    for (let i = 0; i < input.length; i++) {
-      deleteCommentButtons(input[i]._id)
+    for (let i = 0; i < comments.length; i++) {
+      const deletebutton = new Controller;
+      deletebutton.deleteCommentButtons(comments[i]._id)
     }
   }
 
+  listTopLists(topListarray, category) {
 
+    var listOfTopList = "";
+    for (let i = 0; i < 5; i++) {
+      listOfTopList += `
+      <li>
+      <p>${[i + 1]}:  ${topListarray[i].title}</p>
+      </li>
+      `;
+    }
+    if (category == "playlists") {
+      const topPlaylist = document.getElementById("topPlaylists");
+      topPlaylist.innerHTML = listOfTopList;
+    } else if (category == "albums") {
+      const topAlbums = document.getElementById("topAlbums");
+      topAlbums.innerHTML = listOfTopList;
+    } else if (category == "tracks") {
+      const topTracks = document.getElementById("topTracks");
+      topTracks.innerHTML = listOfTopList;
+    }
+
+  }
 
 }
 
@@ -502,9 +595,91 @@ class FormAddNew {
 }
 
 class Utility {
+  calculateMeanRating(ratings) {
+    if (ratings === undefined || ratings.length == 0) {
+      return 0
+    } else {
+      var total = 0,
+        i;
+      for (i = 0; i < ratings.length; i += 1) {
+        total += ratings[i];
+      }
+      var sum = total / ratings.length
+      var twoDecimilSum = sum.toFixed(2);
+      return twoDecimilSum;
+    }
+  }
 
+  clearInputFields() {
+    var inputFields = document.querySelectorAll('.addNew input');
+    for (let i = 0; i < inputFields.length; i++) {
+      inputFields[i].value = '';
+    }
+  }
 
+  genres(input) {
+    var genre = '';
+    for (let i = 0; i < input.length; i++) {
+      if (i >= 1) {
+        genre += `, `;
+      }
+      genre += `${input[i]}`;
+    }
+    return genre;
+  }
+  artists(artists) {
+    var artist = '';
+    for (let i = 0; i < artists.length; i++) {
+      artist += `${artists[i].name} `;
+    }
+    return artist;
+  }
 
+  loopOption1To10() {
+    var option = '';
+    for (let i = 1; i <= 10; i++) {
+      option += `
+      <option id="${[i]}">${[i]}</option>
+      `;
+    }
+    return option
+  }
+
+  loopTracksPlaylist(tracks) {
+    var tracks = '';
+    for (let i = 0; i < tracks.length; i++) {
+      tracks += `<p>Track${[i + 1]}: ${tracks[i].title}</p>`;
+    }
+    return tracks;
+  }
+
+  errorMessage(errortext) {
+    var error = document.getElementById('errormessage');
+    error.style.display = 'block';
+    error.classList.add('fadeIn');
+    document.getElementById("errormessage").innerHTML = errortext;
+    setTimeout(function () {
+      error.classList.add('fadeOut');
+      setTimeout(function () {
+        error.style.display = 'none';
+        error.classList.remove("fadeOut");
+      }, 800);
+    }, 2000);
+  }
+
+  succesMessage(succestext) {
+    var succes = document.getElementById('succesmessage');
+    succes.style.display = 'block';
+    succes.classList.add('fadeIn');
+    document.getElementById("succesmessage").innerHTML = succestext;
+    setTimeout(function () {
+      succes.classList.add('fadeOut');
+      setTimeout(function () {
+        succes.style.display = 'none';
+        succes.classList.remove("fadeOut");
+      }, 800);
+    }, 2000);
+  }
 }
 
 const searchController = new Controller;
@@ -516,208 +691,7 @@ displayInputField.hideShowInputField();
 const addButton = new Controller;
 addButton.addButtonEventlistener();
 
-
-
-
-
-function genres(input) {
-  var genre = '';
-  for (let i = 0; i < input.length; i++) {
-    if (i >= 1) {
-      genre += `, `;
-    }
-    genre += `${input[i]}`;
-  }
-  return genre;
-}
-
-function artists(input) {
-  var artist = '';
-  for (let i = 0; i < input.length; i++) {
-    artist += `${input[i].name} `;
-  }
-  return artist;
-}
-
-function loopOption1To10() {
-  var option = '';
-  for (let i = 1; i <= 10; i++) {
-    option += `
-    <option id="${[i]}">${[i]}</option>
-    `;
-  }
-  return option
-}
-
-function loopTracksPlaylist(input) {
-  var tracks = '';
-  for (let i = 0; i < input.length; i++) {
-    tracks += `<p>Track${[i + 1]}: ${input[i].title}</p>`;
-  }
-  return tracks;
-}
-
-
-
-
-
-
-
-
-
-
-//Deletefunction
-function deleteButtons() {
-  var deleteButtons = document.getElementsByClassName("delete");
-  var deleteOptions = {
-    method: 'DELETE',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    }
-  };
-
-  for (let button of deleteButtons) {
-    button.addEventListener("click", function () {
-      alert("hhrrr");
-      fetch(`https://folksa.ga/api/${this.name}/${this.id}?key=flat_eric`, deleteOptions)
-        .then((response) => response.json())
-        .then((deletedItem) => {
-          succesMessage("Item was deleted");
-        })
-        .catch((error) => {
-          errorMessage(`Request failed: Could not delete objekt`);
-        });
-      var listItemToDelete = this.parentElement;
-      listItemToDelete.parentNode.removeChild(listItemToDelete);
-    })
-  }
-}
-
-function deleteCommentButtons(id) {
-  console.log(input);
-  var deleteButton = document.getElementById(`delete${id}`);
-  var deleteOptions = {
-    method: 'DELETE',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    }
-  };
-
-  deleteButton.addEventListener("click", function () {
-    fetch(`https://folksa.ga/api/${this.name}/${this.dataset.id}?key=flat_eric`, deleteOptions)
-      .then((response) => response.json())
-      .then((deletedItem) => {
-        succesMessage("Item was deleted");
-      })
-      .catch((error) => {
-        errorMessage(`Request failed: Could not delete objekt`);
-      });
-    var listItemToDelete = this.parentElement;
-    listItemToDelete.parentNode.removeChild(listItemToDelete);
-  })
-}
-
-
-function errorMessage(errortext) {
-  var error = document.getElementById('errormessage');
-  error.style.display = 'block';
-  error.classList.add('fadeIn');
-  document.getElementById("errormessage").innerHTML = errortext;
-  setTimeout(function () {
-    error.classList.add('fadeOut');
-    setTimeout(function () {
-      error.style.display = 'none';
-      error.classList.remove("fadeOut");
-    }, 800);
-  }, 2000);
-}
-
-function succesMessage(succestext) {
-
-  var succes = document.getElementById('succesmessage');
-  succes.style.display = 'block';
-  succes.classList.add('fadeIn');
-  document.getElementById("succesmessage").innerHTML = succestext;
-  setTimeout(function () {
-    succes.classList.add('fadeOut');
-    setTimeout(function () {
-      succes.style.display = 'none';
-      succes.classList.remove("fadeOut");
-    }, 800);
-  }, 2000);
-}
-
-function clearInputFields() {
-  var inputFields = document.querySelectorAll('.addNew input');
-  for (let i = 0; i < inputFields.length; i++) {
-    inputFields[i].value = '';
-  }
-}
-
-function calculateMeanRating(ratings) {
-  if (ratings === undefined || ratings.length == 0) {
-    return 0
-  } else {
-    var total = 0,
-      i;
-    for (i = 0; i < ratings.length; i += 1) {
-      total += ratings[i];
-    }
-    var sum = total / ratings.length
-    var twoDecimilSum = sum.toFixed(2);
-    return twoDecimilSum;
-  }
-}
-
-fetchTopList("playlists")
-fetchTopList("albums")
-fetchTopList("tracks")
-
-function fetchTopList(category) {
-  fetch(`https://folksa.ga/api/${category}?limit=999&key=flat_eric`)
-    .then((response) => response.json())
-    .then((categoryTopList) => {
-      var topListarray = [];
-      console.log(categoryTopList);
-      for (let i = 0; i < categoryTopList.length; i++) {
-        var rating = categoryTopList[i].ratings;
-        if (rating.length) {
-          obj = {
-            title: categoryTopList[i].title,
-            rating: calculateMeanRating(rating),
-          };
-          topListarray.push(obj)
-        }
-      }
-      topListarray.sort(function (a, b) {
-        return b.rating - a.rating;
-      });
-      console.log(topListarray);
-      listTopLists(topListarray, category);
-    });
-}
-
-function listTopLists(topListarray, category) {
-
-  var listOfTopList = "";
-  for (let i = 0; i < 5; i++) {
-    listOfTopList += `
-    <li>
-    <p>${topListarray[i].title}</p>
-    </li>
-    `;
-  }
-  if (category == "playlists") {
-    const topPlaylist = document.getElementById("topPlaylists");
-    topPlaylist.innerHTML = listOfTopList;
-  } else if (category == "albums") {
-    const topAlbums = document.getElementById("topAlbums");
-    topAlbums.innerHTML = listOfTopList;
-  } else if (category == "tracks") {
-    const topTracks = document.getElementById("topTracks");
-    topTracks.innerHTML = listOfTopList;
-  }
-
-}
+const fetchToplist = new Fetch();
+fetchToplist.fetchTopList("playlists");
+fetchToplist.fetchTopList("albums");
+fetchToplist.fetchTopList("tracks");
