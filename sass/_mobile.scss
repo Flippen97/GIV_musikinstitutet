@@ -1,10 +1,3 @@
-nav {
-  li {
-    display: block;
-  }
-}
-
-/* Navigation Bar */ 
 body {
   margin: 0;
 }
@@ -15,64 +8,131 @@ header {
   margin: 0px;
   padding: 0px;
   margin-bottom: 10px;
-  text-align: center;
 }
 
+.searchContainer {
+  // border-bottom: 1px solid #000;
+  padding: 10px;
+ 
+
+}
+.logo img {
+  float: left;
+  margin-left: 5%;
+  height:40px;
+  width:40px;
+  margin-top: 0;
+}
+.searchWrap{
+  margin-left:20%;
+  margin-top:2%;
+  margin-bottom:0px;
+ 
+}
 input[type=search] {
   background-color: #FFCC00;
   color: black;
-  width: 200px;
+  font-size: 15px;
+  width: 280px;
+  height: 35px;
   border: 1px solid #000;
   padding: 5px;
-  margin: 0px 20px 0px 0px;
+  margin: 0px 20px 10px 0px;
 }
 
-nav {
-  // border-bottom: 1px solid #000;
-  padding: 10px;
-}
-
-.logo img {
-  float:left;
-  margin-left: 0,5%;
-  height:6px;
-  width:6px;
-}
-
-.menu ul {
-  position: absolute;
-  display:flex;
-  margin-top: 0,5%;
-  margin-left: 1%;
-}
-
-.menu ul li button {
-  margin: 1px 3px;
-  padding: 1px 3px;
+.buttonSubmit  {
+  margin: 4px 10px;
+  padding: 3px 10px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 4px;
+  font-size: 10px;
   background-color: #FFCC00;
   color: black;
-  border: 0,5px solid #000;
+  border: 1px solid #000;
 }
-/* Top Playlist */
-.toplistsWrapper {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+.buttonAddnew{
+  margin: 0px;
+  padding: 3px 3px;
   text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 10px;
+  background-color: #4C9900;
+  color: #FFCC00;
+  border: 1px solid #4C9900;
+}
+/*  Button search Categroy & search Option */
+.styled-select {
+  display: inline-flex;
+  overflow: hidden;
+ 
 }
 
-.hidden {
-  display: none;
+.styled-select select {
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  height: 29px;
+  padding: 5px; /* If you add too much padding here, the options won't show in IE */
+
+  
 }
 
+.styled-select.slate select {
+  border: 1px solid #ccc;
+  font-size: 16px;
+  height: 34px;
 
+  
+}
+
+/* Rounded corners */
+.rounded {
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+}
+
+.semi-square {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+
+/* Colors: Background */
+.black   { background-color: #000; }
+
+/* Colors: Text */
+.black select   { color: #FFCC00; }
+
+
+/* -------------------- Select Box Styles: danielneumann.com Method */
+/* -------------------- Source: http://danielneumann.com/blog/how-to-style-dropdown-with-css-only/ */
+#mainselection select {
+  border: 0;
+  color: #EEE;
+  background: transparent;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 2px 10px;
+  width: 100px;
+  *background: #58B14C;
+  -webkit-appearance: none;
+}
+
+#mainselection {
+  overflow:hidden;
+  width:350px;
+  -moz-border-radius: 9px 9px 9px 9px;
+  -webkit-border-radius: 9px 9px 9px 9px;
+  border-radius: 9px 9px 9px 9px;
+  box-shadow: 1px 1px 11px #330033;
+}
 /* Error Message */
 .flashMessage {
   margin: 5px 0 5px 0;
-  height: 40px;
+ 
 }
 #errormessage {
   width: 90%;
@@ -101,6 +161,61 @@ nav {
   color: white;
   display: none;
 }
+
+
+/* Styling of the Result Search list */
+
+.resultlist {
+  list-style: none;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: rgba(0, 0, 0, 0.6);
+  background-blend-mode: darken;
+  overflow: scroll;
+  color:white;
+  background-color: rgba(0, 0, 0, 0.6);
+  background-blend-mode: darken;
+}
+
+/* Call to action banner */
+
+.calltoaction {
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+  background-color: #FFCC00;
+}
+
+.calltoaction h1 {
+  padding: 5px;
+  background-color: #FFCC00;
+  text-align: center;
+  font-size: 15px;
+}
+
+/* Styling Top 3 Lists */
+
+main .toplistsWrapper {
+  background-color:#9A9A9A;
+  padding: 50px;
+}
+
+main .square {
+  background-color: #FFCC00;
+  margin:10px;
+}
+main .topList {
+  margin:10px;
+  padding:20px;
+  background-color:white;
+  border-style:1px black;
+}
+
+.topList ul {
+  list-style: none;
+  padding: 0;
+
+}
+
 
 /* Create a class that adds a CSS animation: 0 -> 1 */
 

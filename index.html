@@ -10,51 +10,46 @@
 
 <body>
 	<header>
-		<nav>
-			<div class="menu">
+		<div class="searchContainer">
 				<div class="logo">
 					<img src="Mockup/Logo.png" alt="Logo">
 				</div>
-				<ul>
-					<li>
+				<div class="searchWrap">
+					<div class="searchInput">
 						<input type="search" id="searchInput" placeholder="Search..." alt="Insert search">
-					</li>
-					<li>
+					</div>
 						<div class="styled-select black rounded">
-							<select id="searchCategory">
-								<option value>Options</option>
-								<option value="tracks">Track</option>
-								<option value="artists">Artist</option>
-								<option value="albums">Album</option>
-								<option value="playlists">Playlist</option>
+								<select id="searchCategory">
+										<option value>Options</option>
+										<option value="tracks">Track</option>
+										<option value="artists">Artist</option>
+										<option value="albums">Album</option>
+										<option value="playlists">Playlist</option>
+									</select>
+						</div>
+					
+						<div class="styled-select black rounded">
+							<select id="searchOption">
+								<option value="title">Name</option>
+								<option value="genres">Genre</option>
 							</select>
 						</div>
-					</li>
-					<li>
-					<div class="styled-select black rounded">
-						<select id="searchOption">
-							<option value="title">Name</option>
-							<option value="genres">Genre</option>
-						</select>
+				
+					<div class="buttonSubmit">
+							<button id="searchButton">Submit</button>
+					</div>	
+					<div class="buttonAddnew">
+							<a href="#addNew"><button id="addnewButton">Add new</button></a>
 					</div>
-						
-					</li>
-					<li>
-						<button id="searchButton">Submit</button>
-					</li>
-					<li>
-						<a href="#addNew"><button id="addnewButton">Add new</button></a>
-					</li>
-				</ul>
-			</div>
-		</nav>
+					
+				</div>
+			
+		</div>
 	</header>
 	<div class="flashMessage">
 		<div id="errormessage"></div>
 		<div id="succesmessage"></div>
 	</div>
-
-
 	<main>
 		<div class="resultlist">
 
@@ -133,9 +128,6 @@
 		</section>
 
 	</main>
-	<footer>
-
-	</footer>
 	<script type="text/javascript" src="js/main.js"></script>
 </body>
 
