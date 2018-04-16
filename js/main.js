@@ -5,9 +5,12 @@ class Controller {
     var searchOption = document.getElementById('searchOption');
     var searchCategory = document.getElementById('searchCategory');
     const searchButton = document.getElementById("searchButton");
-
+	const message = new Utility();
     searchButton.addEventListener("click", function () {
-      if (searchCategory.value == "artists" && searchOption.value == "title") {
+	  if(searchInput.value == ""){
+		 return message.errorMessage("Write something in the search field!");
+	  }
+      else if (searchCategory.value == "artists" && searchOption.value == "title") {
         var URL = `https://folksa.ga/api/${searchCategory.value}?name=${searchInput.value}&key=flat_eric`;
       } else if (searchCategory.value == "albums") {
         var URL = `https://folksa.ga/api/${searchCategory.value}?${searchOption.value}=${searchInput.value}&populateArtists=true&key=flat_eric`;
