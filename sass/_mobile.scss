@@ -4,6 +4,60 @@ nav {
   }
 }
 
+/* Navigation Bar */ 
+body {
+  margin: 0;
+}
+
+/* Styling of the menu bar */
+
+header {
+  margin: 0px;
+  padding: 0px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+input[type=search] {
+  background-color: #FFCC00;
+  color: black;
+  width: 200px;
+  border: 1px solid #000;
+  padding: 5px;
+  margin: 0px 20px 0px 0px;
+}
+
+nav {
+  // border-bottom: 1px solid #000;
+  padding: 10px;
+}
+
+.logo img {
+  float:left;
+  margin-left: 0,5%;
+  height:6px;
+  width:6px;
+}
+
+.menu ul {
+  position: absolute;
+  display:flex;
+  margin-top: 0,5%;
+  margin-left: 1%;
+}
+
+.menu ul li button {
+  margin: 1px 3px;
+  padding: 1px 3px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 4px;
+  background-color: #FFCC00;
+  color: black;
+  border: 0,5px solid #000;
+}
+/* Top Playlist */
 .toplistsWrapper {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -14,11 +68,12 @@ nav {
   display: none;
 }
 
+
+/* Error Message */
 .flashMessage {
   margin: 5px 0 5px 0;
   height: 40px;
 }
-
 #errormessage {
   width: 90%;
   padding: 0 2.5% 0 2.5%;
