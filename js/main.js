@@ -37,10 +37,49 @@ class Controller {
   }
 
   eventlistenerButtons() {
-    const showButtonController = new Controller();
-    showButtonController.showMoreButtons();
+    this.showMoreButtons();
     deleteButtons();
-    eventlistenerVote();
+    this.eventlistenerVote();
+  }
+
+  addButtonEventlistener() {
+    const addContnent = new Fetch();
+    document.getElementById('addButton').addEventListener('click', function () {
+      switch (addCategory.value) {
+        case 'Artist':
+          addContnent.addArtist().then(clearInputFields);
+          break;
+        case 'Album':
+          addContnent.addArtist().then(addContnent.addAlbum).then(clearInputFields);
+          break;
+        case 'Track':
+          addContnent.addArtist().then(addContnent.addAlbum).then(addContnent.addTrack).then(clearInputFields);
+          break;
+        case 'Playlist':
+          addContnent.addPlaylist().then(clearInputFields);
+          break;
+      }
+    });
+  }
+
+  eventlistenerAddcommentPlaylist() {
+    var commentButtons = document.getElementsByClassName("comment");
+    for (let commentButton of commentButtons) {
+      commentButton.addEventListener("click", function () {
+        const addComment = new Fetch();
+        addComment.addCommentPlaylist(this);
+      })
+    }
+  }
+
+  eventlistenerVote() {
+    var votes = document.getElementsByClassName("vote");
+    for (let vote of votes) {
+      vote.addEventListener("click", function () {
+        const addVote = new Fetch();
+        addVote.voting(this);
+      })
+    }
   }
 
 }
@@ -75,6 +114,177 @@ class Fetch {
         errorMessage(`Request failed: Could not fetch search`);
       });;
   }
+
+  getCommentsPlaylist(playlistId) {
+    var array = [];
+    fetch(`https://folksa.ga/api/playlists/${playlistId}/comments?key=flat_eric`)
+      .then((response) => response.json())
+      .then((comments) => {
+        const displayCommentsDOM = new DOM;
+        displayCommentsDOM.listCommments(comments, playlistId)
+      })
+      .catch((error) => {
+        errorMessage(`Request failed: Could not fetch comments`);
+      });
+  }
+
+  addArtist() {
+    var artistInfo = {
+      name: document.querySelector('#artist input').value,
+      genres: document.querySelector('#genre input').value,
+    }
+
+    var postOptions = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(artistInfo)
+    };
+
+    return fetch('https://folksa.ga/api/artists?key=flat_eric', postOptions)
+      .then((response) => response.json())
+      .then((postedArtist) => {
+        var newArtist = postedArtist;
+        succesMessage("Artist was added");
+        return newArtist;
+      })
+      .catch((error) => {
+        errorMessage(`Request failed: Could not ad artist`);
+      });
+  }
+
+  addAlbum(newArtist) {
+    var albumInfo = {
+      title: document.querySelector('#album input').value,
+      artists: newArtist._id,
+      genres: document.querySelector('#genre input').value
+    }
+    console.log(albumInfo);
+    var postOptions = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(albumInfo)
+    };
+
+    return fetch('https://folksa.ga/api/albums?key=flat_eric', postOptions)
+      .then((response) => response.json())
+      .then((postedAlbum) => {
+        var newAlbum = postedAlbum;
+        console.log(newAlbum);
+        succesMessage("Album was added");
+        return newAlbum;
+      })
+      .catch((error) => {
+        eerrorMessage(`Request failed: Could not ad album`);
+      });
+  }
+
+  addTrack(newAlbum) {
+    console.log(newAlbum);
+    var trackInfo = {
+      title: document.querySelector('#title input').value,
+      artists: newAlbum.artists.join(','),
+      album: newAlbum._id,
+      genres: document.querySelector('#genre input').value
+    }
+
+    var postOptions = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(trackInfo)
+    };
+
+    fetch('https://folksa.ga/api/tracks?key=flat_eric', postOptions)
+      .then((response) => response.json())
+      .then((postedTrack) => {
+        succesMessage("Track was added");
+      })
+      .catch((error) => {
+        errorMessage(`Request failed: Could not ad track`);
+      });
+  }
+
+  addPlaylist() {
+    var PlaylistInfo = {
+      title: document.querySelector('#title input').value,
+      createdBy: document.querySelector('#createdBy input').value
+    }
+    var postOptions = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(PlaylistInfo)
+    };
+
+    fetch('https://folksa.ga/api/playlists?key=flat_eric', postOptions)
+      .then((response) => response.json())
+      .then((postedPlaylist) => {
+        succesMessage("Playlist was added");
+      })
+      .catch((error) => {
+        errorMessage(`Request failed: Could not ad playlist`);
+      });
+  }
+
+
+  addCommentPlaylist(commentParameters) {
+    let comment = {
+      playlist: commentParameters.id,
+      body: commentParameters.previousElementSibling.value,
+      username: commentParameters.previousElementSibling.previousElementSibling.previousElementSibling.value
+    }
+
+    fetch(`https://folksa.ga/api/playlists/${commentParameters.id}/comments?key=flat_eric`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(comment)
+      })
+      .then((response) => response.json())
+      .then((playlist) => {
+        succesMessage("Comment was added");
+      })
+      .catch((error) => {
+        errorMessage(`Request failed: Could not ad comment`);
+      });
+  }
+
+  voting(voteParameters) {
+    var category = voteParameters.name;
+    var categoryId = voteParameters.id;
+    var rating = voteParameters.previousElementSibling.value;
+
+    fetch(`https://folksa.ga/api/${category}/${categoryId}/vote?key=flat_eric`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          rating: rating
+        })
+      })
+      .then((response) => response.json())
+      .then((playlist) => {
+        succesMessage("Vote has been added");
+      })
+      .catch((error) => {
+        errorMessage(`Request failed: Could not add vote`);
+      });
+  }
+
 }
 
 
@@ -170,7 +380,7 @@ class DOM {
     }
     const eventlistenersButton = new Controller();
     eventlistenersButton.eventlistenerButtons();
-    eventlistenerAddcommentPlaylist();
+    eventlistenersButton.eventlistenerAddcommentPlaylist();
 
   }
 
@@ -202,30 +412,109 @@ class DOM {
   }
 
 
-  getCommentsPlaylist(playlistId) {
-    var array = [];
-    fetch(`https://folksa.ga/api/playlists/${playlistId}/comments?key=flat_eric`)
-      .then((response) => response.json())
-      .then((comments) => {
-        listCommments(comments, playlistId)
-      })
-      .catch((error) => {
-        errorMessage(`Request failed: Could not fetch comments`);
-      });
+  listCommments(input, playlistId) {
+    var listOfComments = document.getElementById(`comment${playlistId}`);
+
+    var comment = '';
+    for (let i = 0; i < input.length; i++) {
+      comment += `
+        <div class="comment">
+        <p>Username: ${input[i].username}</p>
+        <p>Content: ${input[i].body}</p>
+        <button class="delete" name="comments" data-id="${input[i]._id}" id="delete${input[i]._id}">Delete comment</button>
+        </div>
+        `;
+    }
+    listOfComments.innerHTML = comment;
+    for (let i = 0; i < input.length; i++) {
+      deleteCommentButtons(input[i]._id)
+    }
   }
+
+
 
 }
 
+class FormAddNew {
+
+  hideShowInputField() {
+    document.getElementById('addCategory').addEventListener('change', function () {
+      const formInputField = new FormAddNew();
+      var inputFields = formInputField.formInputFields();
+
+      inputFields.title.style.display = 'none';
+      inputFields.artist.style.display = 'none';
+      inputFields.album.style.display = 'none';
+      inputFields.genre.style.display = 'none';
+      inputFields.createdBy.style.display = 'none';
+      inputFields.addButton.style.display = 'none';
+    })
+
+    let addCategory = document.getElementById('addCategory');
+    addCategory.addEventListener('change', function () {
+      const showFormDOM = new FormAddNew();
+      showFormDOM.showForm();
+    });
+
+  }
+
+  formInputFields() {
+    let inputFields = {
+      title: document.getElementById('title'),
+      artist: document.getElementById('artist'),
+      album: document.getElementById('album'),
+      genre: document.getElementById('genre'),
+      createdBy: document.getElementById('createdBy'),
+      addButton: document.getElementById('addButton')
+    }
+    return inputFields;
+  }
+
+
+  showForm() {
+    var inputFields = this.formInputFields();
+    switch (addCategory.value) {
+      case 'Track':
+        inputFields.title.style.display = 'inline-block';
+        inputFields.artist.style.display = 'inline-block';
+        inputFields.album.style.display = 'inline-block';
+        inputFields.genre.style.display = 'inline-block';
+        inputFields.addButton.style.display = 'inline-block';
+        break;
+      case 'Artist':
+        inputFields.artist.style.display = 'inline-block';
+        inputFields.genre.style.display = 'inline-block';
+        inputFields.addButton.style.display = 'inline-block';
+        break;
+      case 'Album':
+        inputFields.album.style.display = 'inline-block';
+        inputFields.artist.style.display = 'inline-block';
+        inputFields.genre.style.display = 'inline-block';
+        inputFields.addButton.style.display = 'inline-block';
+        break;
+      case 'Playlist':
+        inputFields.title.style.display = 'inline-block';
+        inputFields.createdBy.style.display = 'inline-block';
+        inputFields.addButton.style.display = 'inline-block';
+        break;
+    }
+  }
+}
 
 class Utility {
+
+
 
 }
 
 const searchController = new Controller;
 searchController.searchParameters();
 
+const displayInputField = new FormAddNew;
+displayInputField.hideShowInputField();
 
-
+const addButton = new Controller;
+addButton.addButtonEventlistener();
 
 
 
@@ -270,281 +559,12 @@ function loopTracksPlaylist(input) {
 
 
 
-function listCommments(input, playlistId) {
-  var listOfComments = document.getElementById(`comment${playlistId}`);
-
-  var comment = '';
-  for (let i = 0; i < input.length; i++) {
-    comment += `
-      <div class="comment">
-      <p>Username: ${input[i].username}</p>
-      <p>Content: ${input[i].body}</p>
-      <button class="delete" name="comments" data-id="${input[i]._id}" id="delete${input[i]._id}">Delete comment</button>
-      </div>
-      `;
-  }
-  listOfComments.innerHTML = comment;
-
-  for (let i = 0; i < input.length; i++) {
-    deleteCommentButtons(input[i]._id)
-  }
-
-}
 
 
 
 
 
 
-
-
-
-document.getElementById('addCategory').addEventListener('change', function () {
-  formInputFields();
-  inputFields.title.style.display = 'none';
-  inputFields.artist.style.display = 'none';
-  inputFields.album.style.display = 'none';
-  inputFields.genre.style.display = 'none';
-  inputFields.createdBy.style.display = 'none';
-  inputFields.addButton.style.display = 'none';
-})
-
-let addCategory = document.getElementById('addCategory');
-addCategory.addEventListener('change', showForm);
-
-function showForm() {
-  formInputFields()
-  switch (addCategory.value) {
-    case 'Track':
-      inputFields.title.style.display = 'inline-block';
-      inputFields.artist.style.display = 'inline-block';
-      inputFields.album.style.display = 'inline-block';
-      inputFields.genre.style.display = 'inline-block';
-      inputFields.addButton.style.display = 'inline-block';
-      break;
-    case 'Artist':
-      inputFields.artist.style.display = 'inline-block';
-      inputFields.genre.style.display = 'inline-block';
-      inputFields.addButton.style.display = 'inline-block';
-      break;
-    case 'Album':
-      inputFields.album.style.display = 'inline-block';
-      inputFields.artist.style.display = 'inline-block';
-      inputFields.genre.style.display = 'inline-block';
-      inputFields.addButton.style.display = 'inline-block';
-      break;
-    case 'Playlist':
-      inputFields.title.style.display = 'inline-block';
-      inputFields.createdBy.style.display = 'inline-block';
-      inputFields.addButton.style.display = 'inline-block';
-      break;
-  }
-}
-
-function formInputFields() {
-  return inputFields = {
-    title: document.getElementById('title'),
-    artist: document.getElementById('artist'),
-    album: document.getElementById('album'),
-    genre: document.getElementById('genre'),
-    createdBy: document.getElementById('createdBy'),
-    addButton: document.getElementById('addButton')
-  }
-}
-
-document.getElementById('addButton').addEventListener('click', function () {
-  switch (addCategory.value) {
-    case 'Artist':
-      addArtist().then(clearInputFields);
-      break;
-    case 'Album':
-      addArtist().then(addAlbum).then(clearInputFields);
-      break;
-    case 'Track':
-      addArtist().then(addAlbum).then(addTrack).then(clearInputFields);
-      break;
-    case 'Playlist':
-      addPlaylist().then(clearInputFields);
-      break;
-  }
-});
-
-function addArtist() {
-  var artistInfo = {
-    name: document.querySelector('#artist input').value,
-    genres: document.querySelector('#genre input').value,
-  }
-
-  var postOptions = {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(artistInfo)
-  };
-
-  return fetch('https://folksa.ga/api/artists?key=flat_eric', postOptions)
-    .then((response) => response.json())
-    .then((postedArtist) => {
-      var newArtist = postedArtist;
-      succesMessage("Artist was added");
-      return newArtist;
-    })
-    .catch((error) => {
-      errorMessage(`Request failed: Could not ad artist`);
-    });
-}
-
-function addAlbum(newArtist) {
-  var albumInfo = {
-    title: document.querySelector('#album input').value,
-    artists: newArtist._id,
-    genres: document.querySelector('#genre input').value
-  }
-  console.log(albumInfo);
-  var postOptions = {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(albumInfo)
-  };
-
-  return fetch('https://folksa.ga/api/albums?key=flat_eric', postOptions)
-    .then((response) => response.json())
-    .then((postedAlbum) => {
-      var newAlbum = postedAlbum;
-      console.log(newAlbum);
-      succesMessage("Album was added");
-      return newAlbum;
-    })
-    .catch((error) => {
-      eerrorMessage(`Request failed: Could not ad album`);
-    });
-}
-
-function addTrack(newAlbum) {
-  console.log(newAlbum);
-  var trackInfo = {
-    title: document.querySelector('#title input').value,
-    artists: newAlbum.artists.join(','),
-    album: newAlbum._id,
-    genres: document.querySelector('#genre input').value
-  }
-
-  var postOptions = {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(trackInfo)
-  };
-
-  fetch('https://folksa.ga/api/tracks?key=flat_eric', postOptions)
-    .then((response) => response.json())
-    .then((postedTrack) => {
-      succesMessage("Track was added");
-    })
-    .catch((error) => {
-      errorMessage(`Request failed: Could not ad track`);
-    });
-}
-
-function addPlaylist() {
-  var PlaylistInfo = {
-    title: document.querySelector('#title input').value,
-    createdBy: document.querySelector('#createdBy input').value
-  }
-  var postOptions = {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(PlaylistInfo)
-  };
-
-  fetch('https://folksa.ga/api/playlists?key=flat_eric', postOptions)
-    .then((response) => response.json())
-    .then((postedPlaylist) => {
-      succesMessage("Playlist was added");
-    })
-    .catch((error) => {
-      errorMessage(`Request failed: Could not ad playlist`);
-    });
-}
-
-function eventlistenerAddcommentPlaylist() {
-  var commentButtons = document.getElementsByClassName("comment");
-  for (let commentButton of commentButtons) {
-    commentButton.addEventListener("click", function () {
-      addCommentPlaylist(this);
-    })
-  }
-}
-
-//Add comment to playlist
-function addCommentPlaylist(commentParameters) {
-  let comment = {
-    playlist: commentParameters.id,
-    body: commentParameters.previousElementSibling.value,
-    username: commentParameters.previousElementSibling.previousElementSibling.previousElementSibling.value
-  }
-
-  fetch(`https://folksa.ga/api/playlists/${commentParameters.id}/comments?key=flat_eric`, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(comment)
-    })
-    .then((response) => response.json())
-    .then((playlist) => {
-      succesMessage("Comment was added");
-    })
-    .catch((error) => {
-      errorMessage(`Request failed: Could not ad comment`);
-    });
-}
-
-
-function eventlistenerVote() {
-  var votes = document.getElementsByClassName("vote");
-  for (let vote of votes) {
-    vote.addEventListener("click", function () {
-      voting(this);
-    })
-  }
-}
-
-//Vote on 
-function voting(voteParameters) {
-  var category = voteParameters.name;
-  var categoryId = voteParameters.id;
-  var rating = voteParameters.previousElementSibling.value;
-
-  fetch(`https://folksa.ga/api/${category}/${categoryId}/vote?key=flat_eric`, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        rating: rating
-      })
-    })
-    .then((response) => response.json())
-    .then((playlist) => {
-      succesMessage("Vote has been added");
-    })
-    .catch((error) => {
-      errorMessage(`Request failed: Could not add vote`);
-    });
-}
 
 //Deletefunction
 function deleteButtons() {
@@ -574,9 +594,9 @@ function deleteButtons() {
   }
 }
 
-function deleteCommentButtons(input) {
+function deleteCommentButtons(id) {
   console.log(input);
-  var deleteButton = document.getElementById(`delete${input}`);
+  var deleteButton = document.getElementById(`delete${id}`);
   var deleteOptions = {
     method: 'DELETE',
     headers: {
@@ -598,6 +618,7 @@ function deleteCommentButtons(input) {
     listItemToDelete.parentNode.removeChild(listItemToDelete);
   })
 }
+
 
 function errorMessage(errortext) {
   var error = document.getElementById('errormessage');
