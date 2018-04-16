@@ -490,7 +490,7 @@ function addTrackToPlaylist() {
 			tracks: trackId
 		})
 	};
-	
+
 	for (let button of addToPlaylistButtons) {
 		button.addEventListener("click", function () {
 			trackId = this.id;
@@ -505,30 +505,32 @@ function addTrackToPlaylist() {
 		fetch('https://folksa.ga/api/playlists?key=flat_eric')
 			.then((response) => response.json())
 			.then((fetchedPlaylists) => {
-				for (playlist of fetchedPlaylists)
+				for (playlist of fetchedPlaylists) {
 					for (userInput of usersPlaylistInput) {
 						if (playlist[title] == userInput.value) {
 							playlistId = playlist._id;
 						} else {
-							continue
-						};
-					};
-			console.log(playlistId);
+							continue;
+						}
+					}
+				}
+				console.log(playlistId);
 			})
 			.catch((error) => {
 				console.log('Request failed: ', error);
 			});
 	}
+
 	function addToPlaylist() {
-	fetch(`https://folksa.ga/api/playlist/${playlistId}/${trackId}?key=flat_eric`, postOptions)
-		.then((response) => response.json())
-		.then((postedTrackToPlaylist) => {
-		console.log(postedTrackToPlaylist);
-	})
-		.catch((error) => {
-			console.log('Request failed: ', error);
-		});
-}
+		fetch(`https://folksa.ga/api/playlist/${playlistId}/${trackId}?key=flat_eric`, postOptions)
+			.then((response) => response.json())
+			.then((postedTrackToPlaylist) => {
+				console.log(postedTrackToPlaylist);
+			})
+			.catch((error) => {
+				console.log('Request failed: ', error);
+			});
+	}
 }
 
 //Feedback messages
