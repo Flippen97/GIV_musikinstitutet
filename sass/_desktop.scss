@@ -52,7 +52,22 @@ input[type=search] {
     color: black;
     border: 1px solid #000;
 }
-
+.buttonAddnew{
+    margin: 4px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 10px;
+    background-color: #4C9900;
+    border: 1px solid black;
+  }
+  .buttonAddnew button {
+    background-color: #4C9900;
+    margin:0px;
+    padding:0px;
+    border:none;
+    color: #FFCC00;
+    }
 
 /* Buttons of the navigation */
 
@@ -189,4 +204,5 @@ main .topList ul {
 }
 #addButton{
     background-color:black;
+    color:#FFCC00;
 }
