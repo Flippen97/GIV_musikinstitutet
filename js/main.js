@@ -116,8 +116,12 @@ class Fetch {
     fetch(URL)
       .then((response) => response.json())
       .then((searchResult) => {
+		console.log(searchResult)
         const displaySearchDOM = new DOM;
-        if (searchCategory.value == "tracks") {
+		if(searchResult.length == 0){
+			return this.utility.errorMessage("Could not find what you were looking for!!")
+		}
+        else if (searchCategory.value == "tracks") {
           displaySearchDOM.displayTrackSearch(searchResult);
           this.utility.succesMessage("You searched for track");
 
