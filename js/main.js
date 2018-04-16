@@ -600,3 +600,69 @@ function clearInputFields() {
     inputFields[i].value = '';
   }
 }
+
+function calculateMeanRating(ratings) {
+  if (ratings === undefined || ratings.length == 0) {
+    return 0
+  } else {
+    var total = 0,
+      i;
+    for (i = 0; i < ratings.length; i += 1) {
+      total += ratings[i];
+    }
+    var sum = total / ratings.length
+    var twoDecimilSum = sum.toFixed(2);
+    return twoDecimilSum;
+  }
+}
+
+fetchTopList("playlists")
+fetchTopList("albums")
+fetchTopList("tracks")
+
+function fetchTopList(category) {
+  fetch(`https://folksa.ga/api/${category}?limit=999&key=flat_eric`)
+    .then((response) => response.json())
+    .then((categoryTopList) => {
+      var topListarray = [];
+      console.log(categoryTopList);
+      for (let i = 0; i < categoryTopList.length; i++) {
+        var rating = categoryTopList[i].ratings;
+        if (rating.length) {
+          obj = {
+            title: categoryTopList[i].title,
+            rating: calculateMeanRating(rating),
+          };
+          topListarray.push(obj)
+        }
+      }
+      topListarray.sort(function (a, b) {
+        return b.rating - a.rating;
+      });
+      console.log(topListarray);
+      listTopLists(topListarray, category);
+    });
+}
+
+function listTopLists(topListarray, category) {
+
+  var listOfTopList = "";
+  for (let i = 0; i < 5; i++) {
+    listOfTopList += `
+    <li>
+    <p>${topListarray[i].title}</p>
+    </li>
+    `;
+  }
+  if (category == "playlists") {
+    const topPlaylist = document.getElementById("topPlaylists");
+    topPlaylist.innerHTML = listOfTopList;
+  } else if (category == "albums") {
+    const topAlbums = document.getElementById("topAlbums");
+    topAlbums.innerHTML = listOfTopList;
+  } else if (category == "tracks") {
+    const topTracks = document.getElementById("topTracks");
+    topTracks.innerHTML = listOfTopList;
+  }
+
+}
