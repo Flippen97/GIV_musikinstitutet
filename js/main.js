@@ -95,7 +95,6 @@ class Controller {
   }
 
   deleteCommentButtons(input) {
-    console.log(input);
     var deleteButton = document.getElementById(`delete${input}`);
     deleteButton.addEventListener("click", function () {
       const deleteFetch = new Fetch();
@@ -115,7 +114,6 @@ class Fetch {
     fetch(URL)
       .then((response) => response.json())
       .then((searchResult) => {
-        console.log(searchResult)
         const displaySearchDOM = new DOM;
         if (searchResult.length == 0) {
           return this.utility.errorMessage("Could not find what you were looking for!!")
@@ -137,7 +135,6 @@ class Fetch {
         }
       })
       .catch((error) => {
-        console.log(error);
         this.utility.errorMessage(`Request failed: Could not fetch search`);
       });;
   }
@@ -151,7 +148,6 @@ class Fetch {
         displayCommentsDOM.listCommments(comments, playlistId)
       })
       .catch((error) => {
-        console.log(error)
         this.utility.errorMessage(`Request failed: Could not fetch comments`);
       });
   }
@@ -194,7 +190,6 @@ class Fetch {
       artists: newArtist._id,
       genres: document.querySelector('#genre input').value
     }
-    console.log(albumInfo);
     var postOptions = {
       method: 'POST',
       headers: {
@@ -213,7 +208,6 @@ class Fetch {
       .then((response) => response.json())
       .then((postedAlbum) => {
         var newAlbum = postedAlbum;
-        console.log(newAlbum);
         this.utility.succesMessage("Album was added");
         return newAlbum;
       })
@@ -223,7 +217,6 @@ class Fetch {
   }
 
   addTrack(newAlbum) {
-    console.log(newAlbum);
     var trackInfo = {
       title: document.querySelector('#title input').value,
       artists: newAlbum.artists.join(','),
@@ -371,7 +364,6 @@ class Fetch {
         this.utility.succesMessage("Item was deleted");
       })
       .catch((error) => {
-        console.log(error)
         this.utility.errorMessage(`Request failed: Could not delete object`);
       });
     var listItemToDelete = button.parentElement;
